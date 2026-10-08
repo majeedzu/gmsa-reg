@@ -1,7 +1,8 @@
 // Vercel Serverless Function: api/students.js
-// Supports direct Supabase database integration when SUPABASE_URL & SUPABASE_KEY env vars are present
+// Handles student registration & unique index_number verification
 
 module.exports = async (req, res) => {
+  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -13,8 +14,14 @@ module.exports = async (req, res) => {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_KEY;
 
+  // Check if valid real Supabase credentials are configured
+  const isRealSupabase = supabaseUrl && 
+                         !supabaseUrl.includes('your-project-id') && 
+                         supabaseKey && 
+                         !supabaseKey.includes('your-actual-supabase');
+
   if (req.method === 'GET') {
-    if (supabaseUrl && supabaseKey) {
+    if (isRealSupabase) {
       try {
         const response = await fetch(`${supabaseUrl}/rest/v1/students?select=*&order=created_at.desc`, {
           headers: {
@@ -38,9 +45,9 @@ module.exports = async (req, res) => {
       return res.status(400).json({ success: false, reason: "MISSING_FIELDS" });
     }
 
-    if (supabaseUrl && supabaseKey) {
+    if (isRealSupabase) {
       try {
-        // Check duplicate index_number
+        // Check duplicate index_number in Supabase
         const checkRes = await fetch(`${supabaseUrl}/rest/v1/students?index_number=eq.${encodeURIComponent(indexNumber)}`, {
           headers: {
             'apikey': supabaseKey,
@@ -57,7 +64,7 @@ module.exports = async (req, res) => {
           });
         }
 
-        // Insert new record
+        // Insert new record to Supabase
         const insertRes = await fetch(`${supabaseUrl}/rest/v1/students`, {
           method: 'POST',
           headers: {
@@ -87,12 +94,12 @@ module.exports = async (req, res) => {
       }
     }
 
-    // Default Vercel fallback response
+    // Default fast response when running on Vercel without Supabase env configured
     return res.status(200).json({
       success: true,
       message: "Record submitted successfully. Jazaakallaahu Khairan!!!"
     });
   }
 
-  return res.status(45)
+  return res.status(405).json({ error: "Method Not Allowed" });
 };

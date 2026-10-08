@@ -1,26 +1,19 @@
 /* ==========================================================================
    GMSA HTU - Ghana Muslim Students' Association, Ho Technical University Chapter
-   Student Page Logic & Database Integration
+   Student Page Logic & Database Integration (Root & App Compatible)
    ========================================================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Database & Storage
   initStorage();
-
-  // Initialize Components
   initSlideshow();
   initRegistrationForm();
   initModal();
 });
 
-/* ==========================================================================
-   1. Database & LocalStorage Helper (Supabase + LocalStorage Fallback)
-   ========================================================================== */
 const STORAGE_KEY_STUDENTS = 'gmsa_htu_students';
 const STORAGE_KEY_SLIDES = 'gmsa_htu_slides';
 
 function initStorage() {
-  // Seed sample records if empty
   if (!localStorage.getItem(STORAGE_KEY_STUDENTS)) {
     const defaultStudents = [
       {
@@ -62,14 +55,12 @@ function getStoredStudents() {
   try {
     return JSON.parse(localStorage.getItem(STORAGE_KEY_STUDENTS)) || [];
   } catch (e) {
-    console.error("Error reading students from storage", e);
     return [];
   }
 }
 
 function saveStudent(studentData) {
   const students = getStoredStudents();
-  // Check index number uniqueness (Case-insensitive trim check)
   const isDuplicate = students.some(s => 
     s.indexNumber.trim().toLowerCase() === studentData.indexNumber.trim().toLowerCase()
   );
@@ -87,27 +78,25 @@ function saveStudent(studentData) {
   students.push(newRecord);
   localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
   
-  // Try sending to Vercel API / Supabase endpoint if online
   syncToApi(newRecord);
 
   return { success: true, record: newRecord };
 }
 
-async function syncToApi(record) {
-  try {
-    await fetch('/api/students', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(record)
-    });
-  } catch (e) {
-    // Silent fallback to LocalStorage
-  }
+function syncToApi(record) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+  fetch('/api/students', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record),
+    signal: controller.signal
+  }).then(res => res.json())
+    .catch(() => {})
+    .finally(() => clearTimeout(timeoutId));
 }
 
-/* ==========================================================================
-   2. Slideshow Component Logic
-   ========================================================================== */
 function initSlideshow() {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
@@ -119,9 +108,7 @@ function initSlideshow() {
 
   let currentIndex = 0;
   let slideInterval = null;
-  const maxSlides = 5;
 
-  // Check if custom slideshow images were saved in admin
   const customSlides = JSON.parse(localStorage.getItem(STORAGE_KEY_SLIDES) || '[]');
   if (customSlides && customSlides.length > 0) {
     slides.forEach((slide, idx) => {
@@ -146,13 +133,8 @@ function initSlideshow() {
     });
   }
 
-  function nextSlide() {
-    showSlide(currentIndex + 1);
-  }
-
-  function prevSlide() {
-    showSlide(currentIndex - 1);
-  }
+  function nextSlide() { showSlide(currentIndex + 1); }
+  function prevSlide() { showSlide(currentIndex - 1); }
 
   function startAutoPlay() {
     stopAutoPlay();
@@ -163,7 +145,6 @@ function initSlideshow() {
     if (slideInterval) clearInterval(slideInterval);
   }
 
-  // Event Listeners
   if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); startAutoPlay(); });
   if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); startAutoPlay(); });
 
@@ -180,7 +161,6 @@ function initSlideshow() {
     container.addEventListener('mouseleave', startAutoPlay);
   }
 
-  // Keyboard navigation
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') nextSlide();
     if (e.key === 'ArrowLeft') prevSlide();
@@ -189,17 +169,14 @@ function initSlideshow() {
   startAutoPlay();
 }
 
-/* ==========================================================================
-   3. Registration Form Handling
-   ========================================================================== */
 function initRegistrationForm() {
   const form = document.getElementById('studentRegistrationForm');
+  const submitBtn = document.getElementById('submitBtn');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Field Extraction
     const fullName = document.getElementById('fullName').value.trim();
     const indexNumber = document.getElementById('indexNumber').value.trim();
     const contact = document.getElementById('contact').value.trim();
@@ -208,7 +185,6 @@ function initRegistrationForm() {
     const programme = document.getElementById('programme').value.trim();
     const hostel = document.getElementById('hostel').value.trim();
 
-    // Validation
     if (!fullName || !indexNumber || !contact || !programme || !hostel) {
       showModal({
         status: 'EXISTS',
@@ -218,50 +194,54 @@ function initRegistrationForm() {
       return;
     }
 
-    // Attempt Save
-    const result = saveStudent({
-      fullName,
-      indexNumber,
-      contact,
-      programmeLevel,
-      programme,
-      hostel
-    });
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Submitting Record...</span>';
+    }
 
-    if (result.success) {
-      showModal({
-        status: 'SUCCESS',
-        title: 'Success!',
-        message: 'Record submitted successfully. Jazaakallaahu Khairan!!!'
+    try {
+      const result = saveStudent({
+        fullName,
+        indexNumber,
+        contact,
+        programmeLevel,
+        programme,
+        hostel
       });
-      form.reset();
-    } else {
-      showModal({
-        status: 'EXISTS',
-        title: 'Duplicate Record',
-        message: 'Your record already exist. Jazaakallaahu Khairan!!!'
-      });
+
+      if (result.success) {
+        showModal({
+          status: 'SUCCESS',
+          title: 'Success!',
+          message: 'Record submitted successfully. Jazaakallaahu Khairan!!!'
+        });
+        form.reset();
+      } else {
+        showModal({
+          status: 'EXISTS',
+          title: 'Duplicate Record',
+          message: 'Your record already exist. Jazaakallaahu Khairan!!!'
+        });
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Submit Record</span>';
+      }
     }
   });
 }
 
-/* ==========================================================================
-   4. Modal / Toast Feedback System
-   ========================================================================== */
 function initModal() {
   const modalOverlay = document.getElementById('feedbackModal');
   const closeModalBtn = document.getElementById('closeModalBtn');
 
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', hideModal);
-  }
-
+  if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
   if (modalOverlay) {
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) hideModal();
     });
   }
-
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') hideModal();
   });

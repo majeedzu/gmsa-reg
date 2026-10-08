@@ -78,21 +78,25 @@ function saveStudent(studentData) {
   students.push(newRecord);
   localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
   
+  // Non-blocking sync to API
   syncToApi(newRecord);
 
   return { success: true, record: newRecord };
 }
 
-async function syncToApi(record) {
-  try {
-    await fetch('/api/students', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(record)
-    });
-  } catch (e) {
-    // LocalStorage fallback
-  }
+function syncToApi(record) {
+  // Fire request with 4 second timeout so it never blocks UI
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+  fetch('/api/students', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record),
+    signal: controller.signal
+  }).then(res => res.json())
+    .catch(() => {}) // Silent error handling
+    .finally(() => clearTimeout(timeoutId));
 }
 
 function initSlideshow() {
@@ -169,9 +173,10 @@ function initSlideshow() {
 
 function initRegistrationForm() {
   const form = document.getElementById('studentRegistrationForm');
+  const submitBtn = document.getElementById('submitBtn');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const fullName = document.getElementById('fullName').value.trim();
@@ -191,28 +196,41 @@ function initRegistrationForm() {
       return;
     }
 
-    const result = saveStudent({
-      fullName,
-      indexNumber,
-      contact,
-      programmeLevel,
-      programme,
-      hostel
-    });
+    // Indicate loading state
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Submitting Record...</span>';
+    }
 
-    if (result.success) {
-      showModal({
-        status: 'SUCCESS',
-        title: 'Success!',
-        message: 'Record submitted successfully. Jazaakallaahu Khairan!!!'
+    try {
+      const result = saveStudent({
+        fullName,
+        indexNumber,
+        contact,
+        programmeLevel,
+        programme,
+        hostel
       });
-      form.reset();
-    } else {
-      showModal({
-        status: 'EXISTS',
-        title: 'Duplicate Record',
-        message: 'Your record already exist. Jazaakallaahu Khairan!!!'
-      });
+
+      if (result.success) {
+        showModal({
+          status: 'SUCCESS',
+          title: 'Success!',
+          message: 'Record submitted successfully. Jazaakallaahu Khairan!!!'
+        });
+        form.reset();
+      } else {
+        showModal({
+          status: 'EXISTS',
+          title: 'Duplicate Record',
+          message: 'Your record already exist. Jazaakallaahu Khairan!!!'
+        });
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Submit Record</span>';
+      }
     }
   });
 }
