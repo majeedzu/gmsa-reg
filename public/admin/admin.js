@@ -36,17 +36,22 @@ function initAuth() {
         return;
       }
 
-      // Instant credential check — no network call needed for static site
-      const validUsers = ['admin', 'gmsa', 'GMSA'];
-      const validPasses = ['gmsa2026', 'admin', 'GMSA2026'];
-      const authenticated = validUsers.includes(user) && validPasses.includes(pass);
+      // Strict credential matching for admin authentication
+      const validCredentials = [
+        { user: 'admin', pass: 'gmsa2026' },
+        { user: 'gmsa', pass: 'gmsa2026' }
+      ];
+
+      const authenticated = validCredentials.some(
+        c => c.user.toLowerCase() === user.toLowerCase() && c.pass === pass
+      );
 
       if (authenticated) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         toggleViews(true);
         renderStudentsTable();
       } else {
-        alert('Invalid credentials!\nDefault login:\n  Username: admin\n  Password: gmsa2026');
+        alert('Access Denied: Invalid username or password.');
       }
     });
   }

@@ -188,7 +188,7 @@ async function loadDynamicLogos() {
   let gmsaLogo = localStorage.getItem(GMSA_LOGO_KEY);
   let htuLogo = localStorage.getItem(HTU_LOGO_KEY);
 
-  if (client && (!gmsaLogo || !htuLogo)) {
+  if (client) {
     try {
       const { data, error } = await client
         .from('settings')
