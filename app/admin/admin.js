@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. Admin Authentication (Supports Vercel API + Local Fallback)
+   1. Instant Synchronous Admin Authentication + API Fallback
    ========================================================================== */
 function initAuth() {
   const loginForm = document.getElementById('adminLoginForm');
@@ -27,52 +27,54 @@ function initAuth() {
   if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const user = document.getElementById('username').value.trim();
-      const pass = document.getElementById('password').value.trim();
+      const user = (document.getElementById('username').value || '').trim();
+      const pass = (document.getElementById('password').value || '').trim();
 
       if (!user || !pass) {
         alert('Please enter both username and password.');
         return;
       }
 
-      if (loginBtn) {
-        loginBtn.disabled = true;
-        loginBtn.textContent = 'Verifying...';
-      }
-
       let authenticated = false;
 
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
+      // Fast sync check for default credentials (0ms latency!)
+      if ((user === 'admin' || user === 'GMSA') && (pass === 'gmsa2026' || pass === 'admin')) {
+        authenticated = true;
+      }
 
-        const res = await fetch('/api/admin', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username: user, password: pass }),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+      // API check for custom env credentials if sync check failed
+      if (!authenticated) {
+        if (loginBtn) {
+          loginBtn.disabled = true;
+          loginBtn.textContent = 'Verifying...';
+        }
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.success) {
-            authenticated = true;
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+          const res = await fetch('/api/admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: user, password: pass }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success) {
+              authenticated = true;
+            }
+          }
+        } catch (err) {
+          // Timeout or offline fallback
+        } finally {
+          if (loginBtn) {
+            loginBtn.disabled = false;
+            loginBtn.textContent = 'Login to Dashboard';
           }
         }
-      } catch (err) {
-        // Local fallback
-      }
-
-      if (!authenticated) {
-        if (user === 'admin' && (pass === 'gmsa2026' || pass === 'admin')) {
-          authenticated = true;
-        }
-      }
-
-      if (loginBtn) {
-        loginBtn.disabled = false;
-        loginBtn.textContent = 'Login to Dashboard';
       }
 
       if (authenticated) {
@@ -80,7 +82,7 @@ function initAuth() {
         toggleViews(true);
         renderStudentsTable();
       } else {
-        alert('Invalid credentials! Please enter valid admin username and password.');
+        alert('Invalid credentials! Default login: username: admin / password: gmsa2026');
       }
     });
   }
@@ -348,11 +350,11 @@ function getSlidesFromStorage() {
   } catch (e) {}
   
   return [
-    '/public/slide1.jpg',
-    '/public/slide2.jpg',
-    '/public/slide3.jpg',
-    '/public/slide4.jpg',
-    '/public/slide5.jpg'
+    'public/slide1.jpg',
+    'public/slide2.jpg',
+    'public/slide3.jpg',
+    'public/slide4.jpg',
+    'public/slide5.jpg'
   ];
 }
 
@@ -376,7 +378,7 @@ function renderSlidesGrid() {
     card.className = 'slide-manage-card';
 
     card.innerHTML = `
-      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='/public/slide${idx + 1}.png';">
+      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='public/slide${idx + 1}.png';">
       <div class="slide-card-body">
         <div class="slide-card-title">Slide #${idx + 1}</div>
         <div class="slide-card-actions">
