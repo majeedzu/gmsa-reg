@@ -48,7 +48,9 @@
 
 body {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: var(--bg-main);
+  background: linear-gradient(135deg, rgba(248, 250, 249, 0.88), rgba(240, 253, 244, 0.92)),
+              url('/public/bg-hero.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: var(--text-dark);
   line-height: 1.6;
   min-height: 100vh;
@@ -64,7 +66,9 @@ body {
 }
 
 .site-header {
-  background: var(--bg-main);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 3px solid var(--gold-primary);
   padding: 24px 0 18px 0;
   box-shadow: var(--shadow-sm);
@@ -227,7 +231,9 @@ body {
 }
 
 .welcome-card {
-  background: linear-gradient(135deg, var(--gmsa-green-card) 0%, #E8F5E9 100%);
+  background: rgba(240, 253, 244, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid var(--border-green);
   border-left: 6px solid var(--gmsa-green);
   border-radius: var(--radius-md);
@@ -266,12 +272,14 @@ body {
 }
 
 .form-section {
-  background: var(--bg-main);
+  background: transparent;
   margin-bottom: 48px;
 }
 
 .form-card {
-  background: var(--gmsa-green-card);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 2px solid var(--border-green);
   border-top: 5px solid var(--gmsa-green);
   border-radius: var(--radius-lg);

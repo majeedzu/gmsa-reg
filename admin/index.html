@@ -23,11 +23,11 @@
       <form id="adminLoginForm" class="login-form">
         <div>
           <label for="username">Username</label>
-          <input type="text" id="username" class="login-input" placeholder="admin" required value="admin">
+          <input type="text" id="username" class="login-input" placeholder="admin" required>
         </div>
         <div>
           <label for="password">Password</label>
-          <input type="password" id="password" class="login-input" placeholder="••••••••" required value="gmsa2026">
+          <input type="password" id="password" class="login-input" placeholder="••••••••" required>
         </div>
         <button type="submit" class="btn-login">Login to Dashboard</button>
       </form>
@@ -56,6 +56,7 @@
       <nav class="admin-tabs">
         <button class="tab-btn active" id="tabStudentsBtn" data-target="sectionStudents">Student Records</button>
         <button class="tab-btn" id="tabSlideshowBtn" data-target="sectionSlideshow">Slideshow Manager (Max 5)</button>
+        <button class="tab-btn" id="tabLogosBtn" data-target="sectionLogos">Logos & Supabase Setup</button>
       </nav>
 
       <!-- TAB 1: STUDENT RECORDS -->
@@ -167,9 +168,82 @@
 
       </section>
 
+      <!-- TAB 3: LOGOS & SUPABASE SETUP -->
+      <section id="sectionLogos" style="display: none;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:28px;">
+          
+          <!-- GMSA Logo Management Card -->
+          <div style="background:#FFF; border:1px solid #E2E8F0; border-radius:12px; padding:24px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+            <h3 style="color:#006837; font-family:'Outfit',sans-serif; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+              <span>☪</span> Custom GMSA Crest Logo
+            </h3>
+            <p style="color:#64748B; font-size:0.875rem; margin-bottom:16px;">Upload custom GMSA logo to replace preprogrammed crest across the site.</p>
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+              <div style="width:80px; height:80px; border:2px dashed #CBD5E1; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#F8FAF9;">
+                <img id="adminGmsaLogoPreview" src="/public/gmsa-logo.svg" style="max-width:100%; max-height:100%; object-fit:contain;" alt="GMSA Preview">
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <input type="file" id="gmsaLogoFileInput" accept="image/*" style="display:none;">
+                <button type="button" id="uploadGmsaLogoBtn" class="btn-slide-action btn-slide-replace" style="padding:8px 16px;">Upload Custom Logo</button>
+                <button type="button" id="resetGmsaLogoBtn" class="btn-slide-action btn-slide-delete" style="padding:8px 16px;">Reset to Default</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- HTU Logo Management Card -->
+          <div style="background:#FFF; border:1px solid #E2E8F0; border-radius:12px; padding:24px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+            <h3 style="color:#1A3C6E; font-family:'Outfit',sans-serif; margin-bottom:8px; display:flex; align-items:center; gap:8px;">
+              <span>🎓</span> Custom HTU Crest Logo
+            </h3>
+            <p style="color:#64748B; font-size:0.875rem; margin-bottom:16px;">Upload custom HTU emblem to replace preprogrammed logo across the portal.</p>
+            <div style="display:flex; align-items:center; gap:16px; margin-bottom:16px;">
+              <div style="width:80px; height:80px; border:2px dashed #CBD5E1; border-radius:50%; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#F8FAF9;">
+                <img id="adminHtuLogoPreview" src="/public/htu-logo.svg" style="max-width:100%; max-height:100%; object-fit:contain;" alt="HTU Preview">
+              </div>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <input type="file" id="htuLogoFileInput" accept="image/*" style="display:none;">
+                <button type="button" id="uploadHtuLogoBtn" class="btn-slide-action btn-slide-replace" style="padding:8px 16px;">Upload Custom Logo</button>
+                <button type="button" id="resetHtuLogoBtn" class="btn-slide-action btn-slide-delete" style="padding:8px 16px;">Reset to Default</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Supabase Live Connection Config Card -->
+        <div style="background:#FFF; border:2px solid #006837; border-radius:12px; padding:28px; box-shadow:0 4px 12px rgba(0,104,55,0.08);">
+          <h3 style="color:#006837; font-family:'Outfit',sans-serif; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"></path><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></svg>
+            Supabase Credentials & Live Sync Configuration
+          </h3>
+          <p style="color:#475569; font-size:0.9rem; margin-bottom:20px;">
+            Paste your Supabase API credentials below to save student records, slideshow images, and custom logos directly into your online Supabase Postgres Database & Storage.
+          </p>
+
+          <form id="supabaseConfigForm" style="display:grid; grid-template-columns:1fr 1fr; gap:18px;">
+            <div style="grid-column: span 2;">
+              <label style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:6px; color:#0F172A;">Supabase Project URL</label>
+              <input type="url" id="adminSupabaseUrl" class="login-input" placeholder="https://your-project-id.supabase.co" style="width:100%; border:1px solid #CBD5E1; border-radius:6px; padding:10px 14px;">
+            </div>
+            <div style="grid-column: span 2;">
+              <label style="display:block; font-weight:600; font-size:0.875rem; margin-bottom:6px; color:#0F172A;">Supabase Anon API Key</label>
+              <input type="password" id="adminSupabaseKey" class="login-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." style="width:100%; border:1px solid #CBD5E1; border-radius:6px; padding:10px 14px;">
+            </div>
+            <div style="grid-column: span 2; display:flex; gap:12px; align-items:center; margin-top:8px;">
+              <button type="submit" class="btn-login" style="width:auto; padding:12px 28px;">Save Supabase Connection</button>
+              <span id="supabaseConfigStatus" style="font-weight:600; font-size:0.9rem; color:#006837;"></span>
+            </div>
+          </form>
+        </div>
+
+      </section>
+
     </main>
   </div>
 
+  <!-- Supabase SDK & Client Integration -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-client.js"></script>
   <script src="admin.js"></script>
 </body>
 </html>

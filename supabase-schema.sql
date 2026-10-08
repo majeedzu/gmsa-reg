@@ -34,13 +34,30 @@ CREATE POLICY "Allow admin delete students"
 ON public.students FOR DELETE 
 USING (true);
 
--- 5. Create Slideshow Images Storage Bucket & Meta Table
+-- 5. Create Slideshow Images Storage & Meta Table
 CREATE TABLE IF NOT EXISTS public.slideshow (
     id SERIAL PRIMARY KEY,
     image_url TEXT NOT NULL,
     title TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- 6. Create Settings Table for Custom Logos & App Config
+CREATE TABLE IF NOT EXISTS public.settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);
+
+-- 7. Enable Row Level Security & Add Policies for Slideshow & Settings
+ALTER TABLE public.slideshow ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Allow public select slideshow" ON public.slideshow FOR SELECT USING (true);
+CREATE POLICY "Allow public all slideshow" ON public.slideshow FOR ALL USING (true);
+
+CREATE POLICY "Allow public select settings" ON public.settings FOR SELECT USING (true);
+CREATE POLICY "Allow public all settings" ON public.settings FOR ALL USING (true);
 
 -- Pre-seed default slides
 INSERT INTO public.slideshow (image_url, title) VALUES
@@ -50,3 +67,4 @@ INSERT INTO public.slideshow (image_url, title) VALUES
 ('/public/slide4.jpg', 'Community Service & Outreach'),
 ('/public/slide5.jpg', 'Unity is Strength')
 ON CONFLICT DO NOTHING;
+

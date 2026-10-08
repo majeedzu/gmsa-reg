@@ -166,7 +166,10 @@ function getStoredStudents() {
   }
 }
 
-function saveStudent(studentData) {
+async function saveStudent(studentData) {
+  if (typeof apiSaveStudent === 'function') {
+    return await apiSaveStudent(studentData);
+  }
   const students = getStoredStudents();
   const isDuplicate = students.some(s => 
     s.indexNumber.trim().toLowerCase() === studentData.indexNumber.trim().toLowerCase()
@@ -188,7 +191,7 @@ function saveStudent(studentData) {
   return { success: true, record: newRecord };
 }
 
-function initSlideshow() {
+async function initSlideshow() {
   const slides = document.querySelectorAll('.slide');
   const dots = document.querySelectorAll('.dot');
   const prevBtn = document.getElementById('prevSlideBtn');
@@ -200,7 +203,15 @@ function initSlideshow() {
   let currentIndex = 0;
   let slideInterval = null;
 
-  const customSlides = JSON.parse(localStorage.getItem(STORAGE_KEY_SLIDES) || '[]');
+  let customSlides = [];
+  if (typeof apiGetSlides === 'function') {
+    customSlides = await apiGetSlides();
+  } else {
+    try {
+      customSlides = JSON.parse(localStorage.getItem(STORAGE_KEY_SLIDES) || '[]');
+    } catch (e) {}
+  }
+
   if (customSlides && customSlides.length > 0) {
     slides.forEach((slide, idx) => {
       if (customSlides[idx]) {
@@ -291,7 +302,7 @@ function initRegistrationForm() {
     }
 
     try {
-      const result = saveStudent({
+      const result = await saveStudent({
         fullName,
         indexNumber,
         contact,

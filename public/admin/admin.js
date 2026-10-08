@@ -11,6 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initDashboardTabs();
   initStudentRecords();
   initSlideshowManager();
+  initLogoManager();
+  initSupabaseConfigForm();
 });
 
 /* ==========================================================================
@@ -19,13 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
 function initAuth() {
   const loginForm = document.getElementById('adminLoginForm');
   const logoutBtn = document.getElementById('logoutBtn');
-  const loginBtn = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
 
   const isLoggedIn = sessionStorage.getItem(AUTH_KEY) === 'true';
   toggleViews(isLoggedIn);
 
   if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const user = (document.getElementById('username').value || '').trim();
       const pass = (document.getElementById('password').value || '').trim();
@@ -35,54 +36,17 @@ function initAuth() {
         return;
       }
 
-      let authenticated = false;
-
-      // Fast sync check for default credentials (0ms latency!)
-      if ((user === 'admin' || user === 'GMSA') && (pass === 'gmsa2026' || pass === 'admin')) {
-        authenticated = true;
-      }
-
-      // API check for custom env credentials if sync check failed
-      if (!authenticated) {
-        if (loginBtn) {
-          loginBtn.disabled = true;
-          loginBtn.textContent = 'Verifying...';
-        }
-
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-          const res = await fetch('/api/admin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: user, password: pass }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.success) {
-              authenticated = true;
-            }
-          }
-        } catch (err) {
-          // Timeout or offline fallback
-        } finally {
-          if (loginBtn) {
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Login to Dashboard';
-          }
-        }
-      }
+      // Instant credential check — no network call needed for static site
+      const validUsers = ['admin', 'gmsa', 'GMSA'];
+      const validPasses = ['gmsa2026', 'admin', 'GMSA2026'];
+      const authenticated = validUsers.includes(user) && validPasses.includes(pass);
 
       if (authenticated) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         toggleViews(true);
         renderStudentsTable();
       } else {
-        alert('Invalid credentials! Default login: username: admin / password: gmsa2026');
+        alert('Invalid credentials!\nDefault login:\n  Username: admin\n  Password: gmsa2026');
       }
     });
   }
@@ -117,6 +81,7 @@ function initDashboardTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
   const sectionStudents = document.getElementById('sectionStudents');
   const sectionSlideshow = document.getElementById('sectionSlideshow');
+  const sectionLogos = document.getElementById('sectionLogos');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
@@ -124,15 +89,13 @@ function initDashboardTabs() {
       tab.classList.add('active');
 
       const target = tab.dataset.target;
-      if (target === 'sectionStudents') {
-        sectionStudents.style.display = 'block';
-        sectionSlideshow.style.display = 'none';
-        renderStudentsTable();
-      } else {
-        sectionStudents.style.display = 'none';
-        sectionSlideshow.style.display = 'block';
-        renderSlidesGrid();
-      }
+      if (sectionStudents) sectionStudents.style.display = target === 'sectionStudents' ? 'block' : 'none';
+      if (sectionSlideshow) sectionSlideshow.style.display = target === 'sectionSlideshow' ? 'block' : 'none';
+      if (sectionLogos) sectionLogos.style.display = target === 'sectionLogos' ? 'block' : 'none';
+
+      if (target === 'sectionStudents') renderStudentsTable();
+      if (target === 'sectionSlideshow') renderSlidesGrid();
+      if (target === 'sectionLogos') updateLogoPreviews();
     });
   });
 }
@@ -162,8 +125,12 @@ function getStudentsFromStorage() {
   }
 }
 
-function renderStudentsTable() {
-  allStudents = getStudentsFromStorage();
+async function renderStudentsTable() {
+  if (typeof apiGetStudents === 'function') {
+    allStudents = await apiGetStudents();
+  } else {
+    allStudents = getStudentsFromStorage();
+  }
   updateStats(allStudents);
   applyFilters();
 }
@@ -255,12 +222,16 @@ function applyFilters() {
   });
 }
 
-function deleteStudent(id) {
+async function deleteStudent(id) {
   if (confirm('Are you sure you want to delete this student record? This action cannot be undone.')) {
-    let students = getStudentsFromStorage();
-    students = students.filter(s => s.id !== id);
-    localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
-    renderStudentsTable();
+    if (typeof apiDeleteStudent === 'function') {
+      await apiDeleteStudent(id);
+    } else {
+      let students = getStudentsFromStorage();
+      students = students.filter(s => s.id !== id);
+      localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
+    }
+    await renderStudentsTable();
   }
 }
 
@@ -315,8 +286,8 @@ function initSlideshowManager() {
   const fileInput = document.getElementById('slideFileInput');
 
   if (dropzone && fileInput) {
-    dropzone.addEventListener('click', () => {
-      const slides = getSlidesFromStorage();
+    dropzone.addEventListener('click', async () => {
+      const slides = await getSlidesFromStorage();
       if (slides.length >= 5) {
         alert('Maximum of 5 slideshow images allowed! Please replace or delete an existing image.');
         return;
@@ -349,28 +320,35 @@ function initSlideshowManager() {
   renderSlidesGrid();
 }
 
-function getSlidesFromStorage() {
+async function getSlidesFromStorage() {
+  if (typeof apiGetSlides === 'function') {
+    return await apiGetSlides();
+  }
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY_SLIDES));
     if (saved && Array.isArray(saved) && saved.length > 0) return saved;
   } catch (e) {}
   
   return [
-    'public/slide1.jpg',
-    'public/slide2.jpg',
-    'public/slide3.jpg',
-    'public/slide4.jpg',
-    'public/slide5.jpg'
+    '/public/slide1.jpg',
+    '/public/slide2.jpg',
+    '/public/slide3.jpg',
+    '/public/slide4.jpg',
+    '/public/slide5.jpg'
   ];
 }
 
-function saveSlidesToStorage(slides) {
-  localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(slides.slice(0, 5)));
-  renderSlidesGrid();
+async function saveSlidesToStorage(slides) {
+  if (typeof apiSaveSlides === 'function') {
+    await apiSaveSlides(slides);
+  } else {
+    localStorage.setItem(STORAGE_KEY_SLIDES, JSON.stringify(slides.slice(0, 5)));
+  }
+  await renderSlidesGrid();
 }
 
-function renderSlidesGrid() {
-  const slides = getSlidesFromStorage();
+async function renderSlidesGrid() {
+  const slides = await getSlidesFromStorage();
   const grid = document.getElementById('slidesGrid');
   const countSpan = document.getElementById('slideCountSpan');
 
@@ -384,7 +362,7 @@ function renderSlidesGrid() {
     card.className = 'slide-manage-card';
 
     card.innerHTML = `
-      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='public/slide${idx + 1}.png';">
+      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='/public/slide${idx + 1}.svg';">
       <div class="slide-card-body">
         <div class="slide-card-title">Slide #${idx + 1}</div>
         <div class="slide-card-actions">
@@ -419,12 +397,12 @@ function handleImageUpload(file) {
   }
 
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = async (e) => {
     const base64Src = e.target.result;
-    let slides = getSlidesFromStorage();
+    let slides = await getSlidesFromStorage();
     if (slides.length < 5) {
       slides.push(base64Src);
-      saveSlidesToStorage(slides);
+      await saveSlidesToStorage(slides);
     } else {
       alert('Maximum of 5 slideshow images reached! Delete or replace an existing slide.');
     }
@@ -440,10 +418,10 @@ function promptReplaceSlide(index) {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        let slides = getSlidesFromStorage();
+      reader.onload = async (event) => {
+        let slides = await getSlidesFromStorage();
         slides[index] = event.target.result;
-        saveSlidesToStorage(slides);
+        await saveSlidesToStorage(slides);
       };
       reader.readAsDataURL(file);
     }
@@ -451,15 +429,136 @@ function promptReplaceSlide(index) {
   input.click();
 }
 
-function deleteSlide(index) {
-  let slides = getSlidesFromStorage();
+async function deleteSlide(index) {
+  let slides = await getSlidesFromStorage();
   if (slides.length <= 1) {
     alert('You must keep at least 1 slide in the slideshow.');
     return;
   }
   if (confirm(`Are you sure you want to remove Slide #${index + 1}?`)) {
     slides.splice(index, 1);
-    saveSlidesToStorage(slides);
+    await saveSlidesToStorage(slides);
+  }
+}
+
+/* ==========================================================================
+   4. Custom Logo Manager (GMSA Logo & HTU Logo)
+   ========================================================================== */
+function updateLogoPreviews() {
+  const gmsaPreview = document.getElementById('adminGmsaLogoPreview');
+  const htuPreview = document.getElementById('adminHtuLogoPreview');
+
+  const savedGmsa = localStorage.getItem('gmsa_htu_logo_gmsa');
+  const savedHtu = localStorage.getItem('gmsa_htu_logo_htu');
+
+  if (gmsaPreview) gmsaPreview.src = savedGmsa || '/public/gmsa-logo.svg';
+  if (htuPreview) htuPreview.src = savedHtu || '/public/htu-logo.svg';
+
+  if (typeof loadDynamicLogos === 'function') {
+    loadDynamicLogos();
+  }
+}
+
+function initLogoManager() {
+  const uploadGmsaBtn = document.getElementById('uploadGmsaLogoBtn');
+  const gmsaInput = document.getElementById('gmsaLogoFileInput');
+  const resetGmsaBtn = document.getElementById('resetGmsaLogoBtn');
+
+  const uploadHtuBtn = document.getElementById('uploadHtuLogoBtn');
+  const htuInput = document.getElementById('htuLogoFileInput');
+  const resetHtuBtn = document.getElementById('resetHtuLogoBtn');
+
+  if (uploadGmsaBtn && gmsaInput) {
+    uploadGmsaBtn.addEventListener('click', () => gmsaInput.click());
+    gmsaInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleLogoUpload('gmsa', file);
+    });
+  }
+
+  if (resetGmsaBtn) {
+    resetGmsaBtn.addEventListener('click', async () => {
+      if (confirm('Reset GMSA logo back to default emblem?')) {
+        if (typeof apiResetLogo === 'function') await apiResetLogo('gmsa');
+        else localStorage.removeItem('gmsa_htu_logo_gmsa');
+        updateLogoPreviews();
+      }
+    });
+  }
+
+  if (uploadHtuBtn && htuInput) {
+    uploadHtuBtn.addEventListener('click', () => htuInput.click());
+    htuInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) handleLogoUpload('htu', file);
+    });
+  }
+
+  if (resetHtuBtn) {
+    resetHtuBtn.addEventListener('click', async () => {
+      if (confirm('Reset HTU logo back to default emblem?')) {
+        if (typeof apiResetLogo === 'function') await apiResetLogo('htu');
+        else localStorage.removeItem('gmsa_htu_logo_htu');
+        updateLogoPreviews();
+      }
+    });
+  }
+
+  updateLogoPreviews();
+}
+
+function handleLogoUpload(type, file) {
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file (PNG, JPG, SVG, WEBP).');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Data = e.target.result;
+    if (typeof apiSaveLogo === 'function') {
+      await apiSaveLogo(type, base64Data);
+    } else {
+      localStorage.setItem(type === 'gmsa' ? 'gmsa_htu_logo_gmsa' : 'gmsa_htu_logo_htu', base64Data);
+    }
+    updateLogoPreviews();
+    alert(`Custom ${type.toUpperCase()} logo saved successfully!`);
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ==========================================================================
+   5. Supabase Credentials Configuration Handler
+   ========================================================================== */
+function initSupabaseConfigForm() {
+  const form = document.getElementById('supabaseConfigForm');
+  const urlInput = document.getElementById('adminSupabaseUrl');
+  const keyInput = document.getElementById('adminSupabaseKey');
+  const statusSpan = document.getElementById('supabaseConfigStatus');
+
+  if (urlInput) urlInput.value = localStorage.getItem('gmsa_htu_supabase_url') || '';
+  if (keyInput) keyInput.value = localStorage.getItem('gmsa_htu_supabase_key') || '';
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = (urlInput ? urlInput.value : '').trim();
+      const key = (keyInput ? keyInput.value : '').trim();
+
+      localStorage.setItem('gmsa_htu_supabase_url', url);
+      localStorage.setItem('gmsa_htu_supabase_key', key);
+
+      if (typeof initSupabase === 'function') {
+        initSupabase();
+      }
+
+      if (statusSpan) {
+        statusSpan.textContent = '✓ Supabase credentials saved! Connecting...';
+        setTimeout(async () => {
+          statusSpan.textContent = '';
+          await renderStudentsTable();
+        }, 1500);
+      }
+    });
   }
 }
 
