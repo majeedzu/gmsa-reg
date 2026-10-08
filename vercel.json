@@ -1,18 +1,6 @@
 {
-  "version": 2,
-  "framework": null,
-  "routes": [
-    {
-      "src": "/admin",
-      "dest": "/app/admin/index.html"
-    },
-    {
-      "src": "/admin/(.*)",
-      "dest": "/app/admin/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/app/page.html"
-    }
+  "rewrites": [
+    { "source": "/", "destination": "/app/page.html" },
+    { "source": "/admin", "destination": "/app/admin/index.html" }
   ]
 }
