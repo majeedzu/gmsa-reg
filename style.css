@@ -625,14 +625,36 @@ body {
 }
 
 @media (max-width: 768px) {
-  .top-banner { grid-template-columns: 1fr; gap: 12px; }
-  .header-titles h1 { font-size: 1.35rem; }
-  .header-titles h2 { font-size: 1.05rem; }
-  .logo-img { width: 75px; height: 75px; }
-  .slideshow-wrapper { height: 260px; }
+  .top-banner { 
+    grid-template-columns: 65px 1fr 65px; 
+    gap: 8px; 
+    align-items: center;
+  }
+  .header-titles h1 { font-size: 1.15rem; line-height: 1.25; }
+  .header-titles h2 { font-size: 0.9rem; margin-top: 2px; }
+  .header-tagline { font-size: 0.75rem; padding: 2px 8px; margin-top: 4px; }
+  .logo-img { width: 65px; height: 65px; }
+  .slideshow-wrapper { height: 220px; border-radius: var(--radius-md); }
+  .slide-btn { width: 36px; height: 36px; font-size: 1rem; }
+  .prev-btn { left: 8px; }
+  .next-btn { right: 8px; }
   .registration-form { grid-template-columns: 1fr; }
   .form-group.full-width { grid-column: span 1; }
   .radio-options { grid-template-columns: 1fr; }
   .footer-content { grid-template-columns: 1fr; gap: 24px; }
-  .form-card { padding: 22px 18px; }
+  .form-card { padding: 22px 16px; }
+}
+
+@media (max-width: 480px) {
+  .top-banner { 
+    grid-template-columns: 55px 1fr 55px; 
+    gap: 6px; 
+  }
+  .logo-img { width: 55px; height: 55px; }
+  .header-titles h1 { font-size: 0.98rem; }
+  .header-titles h2 { font-size: 0.8rem; }
+  .slideshow-wrapper { height: 185px; }
+  .welcome-card { padding: 16px 14px; }
+  .welcome-title { font-size: 1.1rem; }
+  .welcome-subtitle { font-size: 0.85rem; }
 }

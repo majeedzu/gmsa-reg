@@ -7,17 +7,25 @@ const SUPABASE_ANON_KEY = 'gmsa_htu_supabase_key';
 const GMSA_LOGO_KEY = 'gmsa_htu_logo_gmsa';
 const HTU_LOGO_KEY = 'gmsa_htu_logo_htu';
 
+const DEFAULT_SUPABASE_URL = 'https://your-project-id.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'your-actual-supabase-anon-key-here';
+
 let supabaseClient = null;
 
 function getSupabaseConfig() {
-  const storedUrl = localStorage.getItem(SUPABASE_URL_KEY) || (window.SUPABASE_URL || '');
-  const storedKey = localStorage.getItem(SUPABASE_ANON_KEY) || (window.SUPABASE_ANON_KEY || '');
-  return { url: storedUrl.trim(), key: storedKey.trim() };
+  let storedUrl = localStorage.getItem(SUPABASE_URL_KEY) || (window.SUPABASE_URL || DEFAULT_SUPABASE_URL);
+  let storedKey = localStorage.getItem(SUPABASE_ANON_KEY) || (window.SUPABASE_ANON_KEY || DEFAULT_SUPABASE_KEY);
+  return { url: (storedUrl || '').trim(), key: (storedKey || '').trim() };
+}
+
+function isSupabaseConfigured() {
+  const { url, key } = getSupabaseConfig();
+  return url && key && !url.includes('your-project-id') && !key.includes('your-actual-supabase');
 }
 
 function initSupabase() {
   const { url, key } = getSupabaseConfig();
-  if (url && key && window.supabase && typeof window.supabase.createClient === 'function') {
+  if (url && key && !url.includes('your-project-id') && window.supabase && typeof window.supabase.createClient === 'function') {
     try {
       supabaseClient = window.supabase.createClient(url, key);
       console.log('✓ Supabase Client initialized successfully with endpoint:', url);
