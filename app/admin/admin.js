@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GMSA HTU - Admin Dashboard Script
+   GMSA HTU - Admin Dashboard Script (Root & App Compatible)
    ========================================================================== */
 
 const STORAGE_KEY_STUDENTS = 'gmsa_htu_students';
@@ -14,27 +14,73 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. Admin Authentication
+   1. Admin Authentication (Supports Vercel API + Local Fallback)
    ========================================================================== */
 function initAuth() {
   const loginForm = document.getElementById('adminLoginForm');
   const logoutBtn = document.getElementById('logoutBtn');
+  const loginBtn = loginForm ? loginForm.querySelector('button[type="submit"]') : null;
 
   const isLoggedIn = sessionStorage.getItem(AUTH_KEY) === 'true';
   toggleViews(isLoggedIn);
 
   if (loginForm) {
-    loginForm.addEventListener('submit', (e) => {
+    loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const user = document.getElementById('username').value.trim();
       const pass = document.getElementById('password').value.trim();
 
-      if (user === 'admin' && (pass === 'gmsa2026' || pass === 'admin')) {
+      if (!user || !pass) {
+        alert('Please enter both username and password.');
+        return;
+      }
+
+      if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.textContent = 'Verifying...';
+      }
+
+      let authenticated = false;
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+        const res = await fetch('/api/admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            authenticated = true;
+          }
+        }
+      } catch (err) {
+        // Local fallback
+      }
+
+      if (!authenticated) {
+        if (user === 'admin' && (pass === 'gmsa2026' || pass === 'admin')) {
+          authenticated = true;
+        }
+      }
+
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Login to Dashboard';
+      }
+
+      if (authenticated) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         toggleViews(true);
         renderStudentsTable();
       } else {
-        alert('Invalid credentials! Please try username: admin / password: gmsa2026');
+        alert('Invalid credentials! Please enter valid admin username and password.');
       }
     });
   }
@@ -62,9 +108,6 @@ function toggleViews(isLoggedIn) {
   }
 }
 
-/* ==========================================================================
-   2. Dashboard Navigation Tabs
-   ========================================================================== */
 function initDashboardTabs() {
   const tabs = document.querySelectorAll('.tab-btn');
   const sectionStudents = document.getElementById('sectionStudents');
@@ -89,9 +132,6 @@ function initDashboardTabs() {
   });
 }
 
-/* ==========================================================================
-   3. Student Records Management & Excel Export
-   ========================================================================== */
 let allStudents = [];
 
 function initStudentRecords() {
@@ -121,15 +161,22 @@ function renderStudentsTable() {
 }
 
 function updateStats(students) {
-  document.getElementById('statTotal').textContent = students.length;
-  document.getElementById('statBTech').textContent = students.filter(s => s.programmeLevel === 'BTech').length;
-  document.getElementById('statHND').textContent = students.filter(s => s.programmeLevel === 'HND').length;
-  document.getElementById('statOthers').textContent = students.filter(s => s.programmeLevel === 'Others').length;
+  const totalEl = document.getElementById('statTotal');
+  const btechEl = document.getElementById('statBTech');
+  const hndEl = document.getElementById('statHND');
+  const othersEl = document.getElementById('statOthers');
+
+  if (totalEl) totalEl.textContent = students.length;
+  if (btechEl) btechEl.textContent = students.filter(s => s.programmeLevel === 'BTech').length;
+  if (hndEl) hndEl.textContent = students.filter(s => s.programmeLevel === 'HND').length;
+  if (othersEl) othersEl.textContent = students.filter(s => s.programmeLevel === 'Others').length;
 }
 
 function applyFilters() {
-  const query = (document.getElementById('searchInput').value || '').toLowerCase().trim();
-  const levelFilter = document.getElementById('filterLevelSelect').value;
+  const searchEl = document.getElementById('searchInput');
+  const filterEl = document.getElementById('filterLevelSelect');
+  const query = searchEl ? (searchEl.value || '').toLowerCase().trim() : '';
+  const levelFilter = filterEl ? filterEl.value : 'ALL';
 
   const filtered = allStudents.filter(s => {
     const matchesLevel = levelFilter === 'ALL' || s.programmeLevel === levelFilter;
@@ -151,13 +198,13 @@ function applyFilters() {
   tbody.innerHTML = '';
 
   if (filtered.length === 0) {
-    table.style.display = 'none';
-    emptyState.style.display = 'block';
+    if (table) table.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'block';
     return;
   }
 
-  table.style.display = 'table';
-  emptyState.style.display = 'none';
+  if (table) table.style.display = 'table';
+  if (emptyState) emptyState.style.display = 'none';
 
   filtered.forEach((st, idx) => {
     const tr = document.createElement('tr');
@@ -192,9 +239,8 @@ function applyFilters() {
     tbody.appendChild(tr);
   });
 
-  // Attach delete handlers
   tbody.querySelectorAll('.btn-delete-record').forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', () => {
       const recordId = btn.dataset.id;
       deleteStudent(recordId);
     });
@@ -217,7 +263,6 @@ function exportToExcel() {
     return;
   }
 
-  // Format data for Excel
   const excelData = students.map((s, idx) => ({
     "S/N": idx + 1,
     "Full Name": s.fullName || "",
@@ -230,29 +275,16 @@ function exportToExcel() {
   }));
 
   if (typeof XLSX !== 'undefined') {
-    // Generate .xlsx file via SheetJS
     const worksheet = XLSX.utils.json_to_sheet(excelData);
-    
-    // Auto column widths
-    const colWidths = [
-      { wch: 6 },  // S/N
-      { wch: 30 }, // Full Name
-      { wch: 18 }, // Index Number
-      { wch: 18 }, // Level
-      { wch: 32 }, // Programme
-      { wch: 18 }, // Contact
-      { wch: 28 }, // Hostel
-      { wch: 22 }  // Date
+    worksheet['!cols'] = [
+      { wch: 6 },  { wch: 30 }, { wch: 18 }, { wch: 18 },
+      { wch: 32 }, { wch: 18 }, { wch: 28 }, { wch: 22 }
     ];
-    worksheet['!cols'] = colWidths;
-
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "GMSA Students");
-
     const dateStr = new Date().toISOString().split('T')[0];
     XLSX.writeFile(workbook, `GMSA_HTU_Student_Records_${dateStr}.xlsx`);
   } else {
-    // CSV Fallback
     exportToCSV(excelData);
   }
 }
@@ -261,7 +293,6 @@ function exportToCSV(data) {
   const headers = Object.keys(data[0]).join(",");
   const rows = data.map(obj => Object.values(obj).map(v => `"${v}"`).join(","));
   const csvContent = "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
-  
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
   link.setAttribute("href", encodedUri);
@@ -271,9 +302,6 @@ function exportToCSV(data) {
   document.body.removeChild(link);
 }
 
-/* ==========================================================================
-   4. Slideshow Manager (Max 5 Images)
-   ========================================================================== */
 function initSlideshowManager() {
   const dropzone = document.getElementById('uploadDropzone');
   const fileInput = document.getElementById('slideFileInput');
@@ -319,7 +347,6 @@ function getSlidesFromStorage() {
     if (saved && Array.isArray(saved) && saved.length > 0) return saved;
   } catch (e) {}
   
-  // Defaults (5 images)
   return [
     '/public/slide1.jpg',
     '/public/slide2.jpg',
@@ -349,7 +376,7 @@ function renderSlidesGrid() {
     card.className = 'slide-manage-card';
 
     card.innerHTML = `
-      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}">
+      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='/public/slide${idx + 1}.png';">
       <div class="slide-card-body">
         <div class="slide-card-title">Slide #${idx + 1}</div>
         <div class="slide-card-actions">
@@ -362,7 +389,6 @@ function renderSlidesGrid() {
     grid.appendChild(card);
   });
 
-  // Action Handlers
   grid.querySelectorAll('.btn-slide-replace').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetIndex = parseInt(btn.dataset.index, 10);
