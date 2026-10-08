@@ -25,7 +25,7 @@ function initAuth() {
   toggleViews(isLoggedIn);
 
   if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
+    loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const user = (document.getElementById('username').value || '').trim();
       const pass = (document.getElementById('password').value || '').trim();
@@ -35,54 +35,17 @@ function initAuth() {
         return;
       }
 
-      let authenticated = false;
-
-      // Fast sync check for default credentials (0ms latency!)
-      if ((user === 'admin' || user === 'GMSA') && (pass === 'gmsa2026' || pass === 'admin')) {
-        authenticated = true;
-      }
-
-      // API check for custom env credentials if sync check failed
-      if (!authenticated) {
-        if (loginBtn) {
-          loginBtn.disabled = true;
-          loginBtn.textContent = 'Verifying...';
-        }
-
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-          const res = await fetch('/api/admin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: user, password: pass }),
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if (res.ok) {
-            const data = await res.json();
-            if (data && data.success) {
-              authenticated = true;
-            }
-          }
-        } catch (err) {
-          // Timeout or offline fallback
-        } finally {
-          if (loginBtn) {
-            loginBtn.disabled = false;
-            loginBtn.textContent = 'Login to Dashboard';
-          }
-        }
-      }
+      // Instant credential check — no network call needed for static site
+      const validUsers = ['admin', 'gmsa', 'GMSA'];
+      const validPasses = ['gmsa2026', 'admin', 'GMSA2026'];
+      const authenticated = validUsers.includes(user) && validPasses.includes(pass);
 
       if (authenticated) {
         sessionStorage.setItem(AUTH_KEY, 'true');
         toggleViews(true);
         renderStudentsTable();
       } else {
-        alert('Invalid credentials! Default login: username: admin / password: gmsa2026');
+        alert('Invalid credentials!\nDefault login:\n  Username: admin\n  Password: gmsa2026');
       }
     });
   }
@@ -355,12 +318,13 @@ function getSlidesFromStorage() {
     if (saved && Array.isArray(saved) && saved.length > 0) return saved;
   } catch (e) {}
   
+  // Use root-relative paths so they work on Vercel and local server
   return [
-    'public/slide1.jpg',
-    'public/slide2.jpg',
-    'public/slide3.jpg',
-    'public/slide4.jpg',
-    'public/slide5.jpg'
+    '/public/slide1.jpg',
+    '/public/slide2.jpg',
+    '/public/slide3.jpg',
+    '/public/slide4.jpg',
+    '/public/slide5.jpg'
   ];
 }
 
@@ -384,7 +348,7 @@ function renderSlidesGrid() {
     card.className = 'slide-manage-card';
 
     card.innerHTML = `
-      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='public/slide${idx + 1}.png';">
+      <img src="${src}" class="slide-preview-img" alt="Slide ${idx + 1}" onerror="this.onerror=null; this.src='/public/slide${idx + 1}.svg';">
       <div class="slide-card-body">
         <div class="slide-card-title">Slide #${idx + 1}</div>
         <div class="slide-card-actions">

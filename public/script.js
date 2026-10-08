@@ -6,12 +6,119 @@
 document.addEventListener('DOMContentLoaded', () => {
   initStorage();
   initSlideshow();
+  initProgrammeSuggestions();
   initRegistrationForm();
   initModal();
 });
 
 const STORAGE_KEY_STUDENTS = 'gmsa_htu_students';
 const STORAGE_KEY_SLIDES = 'gmsa_htu_slides';
+
+/* ==========================================================================
+   Comprehensive Official Ho Technical University (HTU) Programmes List
+   ========================================================================== */
+const HTU_PROGRAMMES = {
+  BTech: [
+    "BTech Agricultural & Environmental Engineering",
+    "BTech Automobile Engineering",
+    "BTech Biomedical Engineering",
+    "BTech Building Technology",
+    "BTech Civil Engineering",
+    "BTech Computer Science",
+    "BTech Design & Manufacturing Engineering",
+    "BTech Electrical/Electronic Engineering",
+    "BTech Environmental Science & Technology",
+    "BTech Facilities & Estate Management",
+    "BTech Fashion Design & Textiles",
+    "BTech Food Science & Technology",
+    "BTech Hospitality & Tourism Management",
+    "BTech Industrial Art (Ceramics/Sculpture/Painting)",
+    "BTech Information Technology",
+    "BTech Mechanical Engineering",
+    "BTech Accounting & Finance",
+    "BSc Accounting (Finance / Taxation)",
+    "BSc Architectural Technology",
+    "BSc Economics & Innovation",
+    "BSc Financial Services (Banking/Finance/Insurance)",
+    "BSc Marketing with IT",
+    "BSc Procurement & Supply Chain Management",
+    "B.A. Communication & Applied Media Technology",
+    "Bachelor of Secretaryship & Management Studies"
+  ],
+  HND: [
+    "HND Accountancy",
+    "HND Agricultural Engineering",
+    "HND Agro Enterprise Development",
+    "HND Automobile Engineering",
+    "HND Banking & Finance",
+    "HND Building Technology",
+    "HND Civil Engineering",
+    "HND Computer Science",
+    "HND Electrical/Electronic Engineering",
+    "HND Estate Management",
+    "HND Fashion Design & Textiles",
+    "HND Food Technology",
+    "HND Hotel, Catering & Institutional Management (HCIM)",
+    "HND Industrial Art",
+    "HND Information & Communication Technology (ICT)",
+    "HND Marketing",
+    "HND Mechanical Engineering (Production/Plant)",
+    "HND Purchasing & Supply",
+    "HND Quantity Surveying & Construction Economics",
+    "HND Secretaryship & Management Studies",
+    "HND Statistics"
+  ],
+  Others: [
+    "Diploma in Accounting",
+    "Diploma in Banking & Finance",
+    "Diploma in Beauty & Wellness",
+    "Diploma in Communication Studies",
+    "Diploma in Computer Science",
+    "Diploma in Hospitality Management",
+    "Diploma in Marketing",
+    "Diploma in Procurement & Supply Chain Management",
+    "Diploma in Secretaryship & Management Studies",
+    "Diploma in Statistics with Finance",
+    "MTech Automobile Engineering",
+    "MTech Production Engineering",
+    "MTech Refrigeration & Air Conditioning",
+    "MTech Agricultural Engineering",
+    "MSc Hospitality & Tourism Management",
+    "Other Certificate / Non-Tertiary Programme"
+  ]
+};
+
+function initProgrammeSuggestions() {
+  const datalist = document.getElementById('programmeSuggestions');
+  const radioButtons = document.querySelectorAll('input[name="programmeLevel"]');
+  if (!datalist) return;
+
+  function updateDatalist(level) {
+    datalist.innerHTML = '';
+    const items = HTU_PROGRAMMES[level] || [
+      ...HTU_PROGRAMMES.BTech,
+      ...HTU_PROGRAMMES.HND,
+      ...HTU_PROGRAMMES.Others
+    ];
+
+    items.forEach(prog => {
+      const option = document.createElement('option');
+      option.value = prog;
+      datalist.appendChild(option);
+    });
+  }
+
+  radioButtons.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        updateDatalist(e.target.value);
+      }
+    });
+  });
+
+  const checkedRadio = document.querySelector('input[name="programmeLevel"]:checked');
+  updateDatalist(checkedRadio ? checkedRadio.value : 'BTech');
+}
 
 function initStorage() {
   if (!localStorage.getItem(STORAGE_KEY_STUDENTS)) {
@@ -78,14 +185,12 @@ function saveStudent(studentData) {
   students.push(newRecord);
   localStorage.setItem(STORAGE_KEY_STUDENTS, JSON.stringify(students));
   
-  // Non-blocking sync to API
   syncToApi(newRecord);
 
   return { success: true, record: newRecord };
 }
 
 function syncToApi(record) {
-  // Fire request with 4 second timeout so it never blocks UI
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 4000);
 
@@ -95,7 +200,7 @@ function syncToApi(record) {
     body: JSON.stringify(record),
     signal: controller.signal
   }).then(res => res.json())
-    .catch(() => {}) // Silent error handling
+    .catch(() => {})
     .finally(() => clearTimeout(timeoutId));
 }
 
@@ -196,7 +301,6 @@ function initRegistrationForm() {
       return;
     }
 
-    // Indicate loading state
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>Submitting Record...</span>';

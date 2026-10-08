@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - GMSA HTU</title>
   <link rel="stylesheet" href="admin.css">
-  <link rel="icon" type="image/svg+xml" href="../public/gmsa-logo.svg">
+  <link rel="icon" type="image/svg+xml" href="/public/gmsa-logo.svg">
   <!-- SheetJS CDN for Real Excel (.xlsx) Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -14,7 +14,9 @@
   <!-- Admin Login View -->
   <div id="loginView" class="login-wrapper">
     <div class="login-card">
-      <img src="../public/gmsa-logo.png" alt="GMSA Logo" class="login-logo" onerror="this.onerror=null; this.src='../public/gmsa-logo.svg';">
+      <img src="/public/gmsa-logo.svg" alt="GMSA Logo" class="login-logo" id="loginLogoImg"
+        onerror="this.onerror=null; this.style.display='none'; document.getElementById('loginLogoFallback').style.display='flex';">
+      <div id="loginLogoFallback" style="display:none; width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#006837,#004D28); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 16px;">☪</div>
       <h2>GMSA HTU Admin</h2>
       <p>Enter administrative credentials to access records</p>
       
@@ -38,11 +40,11 @@
     <!-- Navbar Header -->
     <header class="admin-navbar">
       <div class="admin-nav-brand">
-        <img src="../public/gmsa-logo.png" alt="GMSA Crest" onerror="this.onerror=null; this.src='../public/gmsa-logo.svg';">
+        <img src="/public/gmsa-logo.svg" alt="GMSA Crest" onerror="this.onerror=null; this.style.display='none';">
         <h1>GMSA HTU Portal <span>Admin Control Panel</span></h1>
       </div>
       <div style="display:flex; gap:12px; align-items:center;">
-        <a href="../index.html" style="color:#FFF; text-decoration:none; font-size:0.875rem; font-weight:600;" target="_blank">View Main Site ↗</a>
+        <a href="/" style="color:#FFF; text-decoration:none; font-size:0.875rem; font-weight:600;" target="_blank">View Main Site ↗</a>
         <button id="logoutBtn" class="btn-logout">Logout</button>
       </div>
     </header>
