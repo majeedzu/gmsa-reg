@@ -189,7 +189,7 @@ try {
   const publicDir = path.join(__dirname, 'public');
   if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
 
-  const filesToCopy = ['index.html', 'style.css', 'script.js'];
+  const filesToCopy = ['index.html', 'style.css', 'script.js', 'supabase-client.js', 'gmsa-logo.svg', 'htu-logo.svg', 'bg-hero.jpg'];
   filesToCopy.forEach(file => {
     const src = path.join(__dirname, file);
     if (fs.existsSync(src)) {

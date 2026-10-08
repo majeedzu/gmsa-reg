@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ghana Muslim Students' Association (GMSA) - Ho Technical University Chapter</title>
-  <meta name="description" content="Official Portal of Ghana Muslim Students' Association (GMSA), Ho Technical University Chapter. Register your student record, access announcements, and join our vibrant Muslim student community.">
+  <meta name="description"
+    content="Official Portal of Ghana Muslim Students' Association (GMSA), Ho Technical University Chapter. Register your student record, access announcements, and join our vibrant Muslim student community.">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/svg+xml" href="/public/gmsa-logo.svg">
 </head>
+
 <body>
 
   <!-- Top Header Section -->
@@ -16,21 +19,25 @@
       <div class="top-banner">
         <div class="logo-container">
           <img src="/public/gmsa-logo.svg" alt="GMSA Logo" class="logo-img" id="gmsaLogoImg"
-            onerror="this.onerror=null; this.style.display='none'; document.getElementById('gmsaLogoFallback').style.display='flex';">
-          <div id="gmsaLogoFallback" style="display:none; width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#006837,#004D28); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem;">☪</div>
+            onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='gmsa-logo.svg';}else if(this.dataset.retry==1){this.dataset.retry=2;this.src='/gmsa-logo.svg';}else if(this.dataset.retry==2){this.dataset.retry=3;this.src='public/gmsa-logo.svg';}else{this.style.display='none';document.getElementById('gmsaLogoFallback').style.display='flex';}">
+          <div id="gmsaLogoFallback"
+            style="display:none; width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#006837,#004D28); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem;">
+            ☪</div>
         </div>
-        
+
         <!-- Centered Titles -->
         <div class="header-titles">
           <h1>Ghana Muslim Students’ Association (GMSA)</h1>
           <h2>Ho Technical University Chapter</h2>
-          <div class="header-tagline">Unity in Faith & Academic Excellence</div>
+          <div class="header-tagline">Unity is Strength</div>
         </div>
 
         <div class="logo-container">
           <img src="/public/htu-logo.svg" alt="HTU Logo" class="logo-img" id="htuLogoImg"
-            onerror="this.onerror=null; this.style.display='none'; document.getElementById('htuLogoFallback').style.display='flex';">
-          <div id="htuLogoFallback" style="display:none; width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#1a3c6e,#0d2040); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem;">🎓</div>
+            onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='htu-logo.svg';}else if(this.dataset.retry==1){this.dataset.retry=2;this.src='/htu-logo.svg';}else if(this.dataset.retry==2){this.dataset.retry=3;this.src='public/htu-logo.svg';}else{this.style.display='none';document.getElementById('htuLogoFallback').style.display='flex';}">
+          <div id="htuLogoFallback"
+            style="display:none; width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#1a3c6e,#0d2040); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem;">
+            🎓</div>
         </div>
       </div>
     </div>
@@ -44,23 +51,28 @@
       <div class="slideshow-wrapper" id="slideshowContainer">
         <!-- Slide 1 -->
         <div class="slide active">
-          <img src="/public/slide1.jpg" alt="GMSA HTU Campus Welcome" onerror="this.onerror=null; this.src='/public/slide1.svg';">
+          <img src="/public/slide1.jpg" alt="GMSA HTU Campus Welcome"
+            onerror="this.onerror=null; this.src='/public/slide1.svg';">
         </div>
         <!-- Slide 2 -->
         <div class="slide">
-          <img src="/public/slide2.jpg" alt="Annual GMSA Orientation" onerror="this.onerror=null; this.src='/public/slide2.svg';">
+          <img src="/public/slide2.jpg" alt="Annual GMSA Orientation"
+            onerror="this.onerror=null; this.src='/public/slide2.svg';">
         </div>
         <!-- Slide 3 -->
         <div class="slide">
-          <img src="/public/slide3.jpg" alt="Weekly Da'wah &amp; Quranic Circles" onerror="this.onerror=null; this.src='/public/slide3.svg';">
+          <img src="/public/slide3.jpg" alt="Weekly Da'wah &amp; Quranic Circles"
+            onerror="this.onerror=null; this.src='/public/slide3.svg';">
         </div>
         <!-- Slide 4 -->
         <div class="slide">
-          <img src="/public/slide4.jpg" alt="Community Service &amp; Outreach" onerror="this.onerror=null; this.src='/public/slide4.svg';">
+          <img src="/public/slide4.jpg" alt="Community Service &amp; Outreach"
+            onerror="this.onerror=null; this.src='/public/slide4.svg';">
         </div>
         <!-- Slide 5 -->
         <div class="slide">
-          <img src="/public/slide5.jpg" alt="Unity is Strength" onerror="this.onerror=null; this.src='/public/slide5.svg';">
+          <img src="/public/slide5.jpg" alt="Unity is Strength"
+            onerror="this.onerror=null; this.src='/public/slide5.svg';">
         </div>
 
         <!-- Navigation Buttons -->
@@ -82,7 +94,8 @@
     <section class="welcome-section">
       <div class="welcome-card">
         <h2 class="welcome-title">“Assalaamu Alaikum Warahmatullah Wabarakaatuh”</h2>
-        <p class="welcome-subtitle">Welcome to the official GMSA Ho Technical University Chapter registration portal. Please complete the form below to submit your official record.</p>
+        <p class="welcome-subtitle">Welcome to the official GMSA Ho Technical University Chapter registration portal.
+          Please complete the form below to submit your official record.</p>
       </div>
     </section>
 
@@ -106,13 +119,15 @@
           <!-- Full Name -->
           <div class="form-group full-width">
             <label for="fullName">Full Name <span class="required">*</span></label>
-            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="e.g. Ibrahim Abubakar Mohammed" required>
+            <input type="text" id="fullName" name="fullName" class="form-input"
+              placeholder="e.g. Ibrahim Abubakar Mohammed" required>
           </div>
 
           <!-- Index Number -->
           <div class="form-group">
             <label for="indexNumber">Index Number <span class="required">*</span></label>
-            <input type="text" id="indexNumber" name="indexNumber" class="form-input" placeholder="e.g. 0420190001" required>
+            <input type="text" id="indexNumber" name="indexNumber" class="form-input" placeholder="e.g. 0420190001"
+              required>
           </div>
 
           <!-- Contact Number -->
@@ -143,7 +158,8 @@
           <!-- Programme -->
           <div class="form-group">
             <label for="programme">Programme <span class="required">*</span></label>
-            <input type="text" id="programme" name="programme" class="form-input" placeholder="e.g. BTech Computer Science" required list="programmeSuggestions">
+            <input type="text" id="programme" name="programme" class="form-input"
+              placeholder="e.g. BTech Computer Science" required list="programmeSuggestions">
             <datalist id="programmeSuggestions">
               <option value="BTech Computer Science">
               <option value="BTech Information Technology">
@@ -162,7 +178,8 @@
           <!-- Hostel / Residence -->
           <div class="form-group">
             <label for="hostel">Hostel / Residence <span class="required">*</span></label>
-            <input type="text" id="hostel" name="hostel" class="form-input" placeholder="e.g. Ameen Hostel / Main Campus Hostel" required>
+            <input type="text" id="hostel" name="hostel" class="form-input"
+              placeholder="e.g. Ameen Hostel / Main Campus Hostel" required>
           </div>
 
           <!-- Submit Button -->
@@ -202,7 +219,8 @@
             About Us
           </h4>
           <p>
-            Ghana Muslim Students’ Association (GMSA), Ho Technical University Chapter, is a community of Muslim students committed to unity, brotherhood, faith and active participation on campus.
+            Ghana Muslim Students’ Association (GMSA), Ho Technical University Chapter, is a community of Muslim
+            students committed to unity, brotherhood, faith and active participation on campus.
           </p>
         </div>
 
@@ -212,13 +230,17 @@
           <div class="phone-links">
             <a href="tel:0545862058" class="phone-link">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
               </svg>
               0545862058
             </a>
             <a href="tel:0541081265" class="phone-link">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                <path
+                  d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z">
+                </path>
               </svg>
               0541081265
             </a>
@@ -239,4 +261,5 @@
   <script src="supabase-client.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>

@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="500" height="500">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7D070"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#AA7C11"/>
+    </linearGradient>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#008044"/>
+      <stop offset="100%" stop-color="#004D28"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <circle cx="250" cy="250" r="235" fill="url(#goldGrad)" />
+  <circle cx="250" cy="250" r="225" fill="#ffffff" />
+  <circle cx="250" cy="250" r="215" fill="url(#greenGrad)" />
+  <circle cx="250" cy="250" r="160" fill="#ffffff" />
+  <circle cx="250" cy="250" r="152" fill="url(#greenGrad)" />
+  
+  <path id="textPathTop" d="M 65 250 A 185 185 0 1 1 435 250" fill="none" />
+  <path id="textPathBottom" d="M 435 250 A 185 185 0 1 1 70 250" fill="none" />
+  
+  <text font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="21" fill="url(#goldGrad)" letter-spacing="1">
+    <textPath href="#textPathTop" startOffset="50%" text-anchor="middle">
+      GHANA MUSLIM STUDENTS' ASSOCIATION
+    </textPath>
+  </text>
+  
+  <text font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="20" fill="url(#goldGrad)" letter-spacing="2">
+    <textPath href="#textPathBottom" startOffset="50%" text-anchor="middle">
+      HO TECHNICAL UNIVERSITY CHAPTER
+    </textPath>
+  </text>
+  
+  <g fill="url(#goldGrad)">
+    <polygon points="50,250 55,240 65,240 57,233 60,223 50,230 40,223 43,233 35,240 45,240"/>
+    <polygon points="450,250 455,240 465,240 457,233 460,223 450,230 440,223 443,233 435,240 445,240"/>
+  </g>
+  
+  <g transform="translate(250, 230)" filter="url(#shadow)">
+    <path d="M 25 -70 A 65 65 0 1 0 70 30 A 55 55 0 1 1 25 -70 Z" fill="url(#goldGrad)" />
+    <polygon points="45,-45 49,-35 59,-35 51,-29 54,-19 45,-25 36,-19 39,-29 31,-35 41,-35" fill="url(#goldGrad)" />
+  </g>
+  
+  <g transform="translate(250, 275)">
+    <path d="M -5 0 Q -40 -15 -80 0 L -80 35 Q -40 20 -5 35 Z" fill="#ffffff" stroke="url(#goldGrad)" stroke-width="3"/>
+    <path d="M 5 0 Q 40 -15 80 0 L 80 35 Q 40 20 5 35 Z" fill="#ffffff" stroke="url(#goldGrad)" stroke-width="3"/>
+    <path d="M 0 -5 L 0 40" stroke="url(#goldGrad)" stroke-width="4"/>
+    <line x1="-65" y1="10" x2="-20" y2="4" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="-65" y1="20" x2="-20" y2="14" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="20" y1="4" x2="65" y2="10" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="20" y1="14" x2="65" y2="20" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  
+  <g transform="translate(250, 355)">
+    <rect x="-90" y="-15" width="180" height="28" rx="14" fill="url(#goldGrad)" />
+    <text font-family="Arial, sans-serif" font-weight="bold" font-size="13" fill="#004D28" text-anchor="middle" y="4">UNITY IS STRENGTH</text>
+  </g>
+</svg>

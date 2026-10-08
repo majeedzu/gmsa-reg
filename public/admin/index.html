@@ -15,7 +15,7 @@
   <div id="loginView" class="login-wrapper">
     <div class="login-card">
       <img src="/public/gmsa-logo.svg" alt="GMSA Logo" class="login-logo" id="loginLogoImg"
-        onerror="this.onerror=null; this.style.display='none'; document.getElementById('loginLogoFallback').style.display='flex';">
+        onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='../public/gmsa-logo.svg';}else if(this.dataset.retry==1){this.dataset.retry=2;this.src='/gmsa-logo.svg';}else if(this.dataset.retry==2){this.dataset.retry=3;this.src='../gmsa-logo.svg';}else{this.style.display='none';document.getElementById('loginLogoFallback').style.display='flex';}">
       <div id="loginLogoFallback" style="display:none; width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,#006837,#004D28); border:3px solid #D4AF37; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 16px;">☪</div>
       <h2>GMSA HTU Admin</h2>
       <p>Enter administrative credentials to access records</p>
@@ -40,7 +40,7 @@
     <!-- Navbar Header -->
     <header class="admin-navbar">
       <div class="admin-nav-brand">
-        <img src="/public/gmsa-logo.svg" alt="GMSA Crest" onerror="this.onerror=null; this.style.display='none';">
+        <img src="/public/gmsa-logo.svg" alt="GMSA Crest" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='../public/gmsa-logo.svg';}else if(this.dataset.retry==1){this.dataset.retry=2;this.src='/gmsa-logo.svg';}else{this.style.display='none';}">
         <h1>GMSA HTU Portal <span>Admin Control Panel</span></h1>
       </div>
       <div style="display:flex; gap:12px; align-items:center;">
