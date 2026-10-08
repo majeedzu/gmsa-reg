@@ -16,7 +16,6 @@
   <circle cx="250" cy="250" r="155" fill="#ffffff" />
   <circle cx="250" cy="250" r="147" fill="url(#blueGrad)" />
 
-  <!-- Outer Text -->
   <path id="htuTextTop" d="M 70 250 A 180 180 0 1 1 430 250" fill="none" />
   <path id="htuTextBottom" d="M 430 250 A 180 180 0 1 1 70 250" fill="none" />
 
@@ -32,23 +31,17 @@
     </textPath>
   </text>
 
-  <!-- Center Gear & Torch Emblem -->
   <g transform="translate(250, 240)">
-    <!-- Cogwheel / Gear -->
     <path d="M -60 -15 L -50 -15 L -45 -30 L -55 -40 L -40 -55 L -30 -45 L -15 -50 L -15 -60 L 15 -60 L 15 -50 L 30 -45 L 40 -55 L 55 -40 L 45 -30 L 50 -15 L 60 -15 L 60 15 L 50 15 L 45 30 L 55 40 L 40 55 L 30 45 L 15 50 L 15 60 L -15 60 L -15 50 L -30 45 L -40 55 L -55 40 L -45 30 L -50 15 L -60 15 Z" fill="none" stroke="url(#goldGradHtu)" stroke-width="8"/>
-    <!-- Inner Circle -->
     <circle cx="0" cy="0" r="42" fill="#ffffff"/>
     <circle cx="0" cy="0" r="36" fill="url(#blueGrad)"/>
 
-    <!-- Torch & Flame -->
     <path d="M -12 25 L 12 25 L 7 5 L -7 5 Z" fill="url(#goldGradHtu)"/>
     <path d="M -15 5 L 15 5 L 10 -8 L -10 -8 Z" fill="url(#goldGradHtu)"/>
-    <!-- Flame -->
     <path d="M 0 -35 Q 15 -18 0 -5 Q -15 -18 0 -35 Z" fill="#FF4500"/>
     <path d="M 0 -30 Q 8 -18 0 -10 Q -8 -18 0 -30 Z" fill="#FFD700"/>
   </g>
 
-  <!-- Open Book at base -->
   <g transform="translate(250, 330)">
     <path d="M -50 -10 Q -25 -20 0 -10 Q 25 -20 50 -10 L 50 15 Q 25 5 0 15 Q -25 5 -50 15 Z" fill="url(#goldGradHtu)"/>
     <path d="M -46 -6 Q -23 -16 0 -7 Q 23 -16 46 -6 L 46 11 Q 23 2 0 11 Q -23 2 -46 11 Z" fill="#ffffff"/>

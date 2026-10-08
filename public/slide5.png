@@ -10,21 +10,16 @@
       </linearGradient>
     </defs>
     <rect width="1200" height="500" fill="url(#bg5)" />
-    <!-- Decorative Islamic Geometry Patterns -->
     <g opacity="0.08" fill="#ffffff">
       <circle cx="100" cy="100" r="200" stroke="#fff" stroke-width="4" fill="none"/>
       <circle cx="1100" cy="400" r="250" stroke="#fff" stroke-width="4" fill="none"/>
       <polygon points="600,50 650,150 750,150 670,220 700,320 600,250 500,320 530,220 450,150 550,150" />
     </g>
-    <!-- Dark Vignette Overlay -->
     <rect width="1200" height="500" fill="rgba(0,0,0,0.35)"/>
     
-    <!-- Top Accent Bar -->
     <rect x="0" y="0" width="1200" height="8" fill="url(#goldGrad)"/>
-    <!-- Bottom Accent Bar -->
     <rect x="0" y="492" width="1200" height="8" fill="url(#goldGrad)"/>
 
-    <!-- Content -->
     <g transform="translate(600, 230)" text-anchor="middle">
       <rect x="-420" y="-120" width="840" height="220" rx="16" fill="rgba(0,40,20,0.4)" stroke="url(#goldGrad)" stroke-width="2"/>
       <text font-family="'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="44" fill="#ffffff" y="-40" letter-spacing="1">

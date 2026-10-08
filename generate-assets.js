@@ -17,16 +17,14 @@ const gmsaSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" w
     </filter>
   </defs>
   
-  <!-- Outer Gold Ring -->
   <circle cx="250" cy="250" r="235" fill="url(#goldGrad)" />
   <circle cx="250" cy="250" r="225" fill="#ffffff" />
   <circle cx="250" cy="250" r="215" fill="url(#greenGrad)" />
   <circle cx="250" cy="250" r="160" fill="#ffffff" />
   <circle cx="250" cy="250" r="152" fill="url(#greenGrad)" />
   
-  <!-- Curved Text Path Outer -->
   <path id="textPathTop" d="M 65 250 A 185 185 0 1 1 435 250" fill="none" />
-  <path id="textPathBottom" d="M 435 250 A 185 185 0 1 1 65 250" fill="none" />
+  <path id="textPathBottom" d="M 435 250 A 185 185 0 1 1 70 250" fill="none" />
   
   <text font-family="Arial, Helvetica, sans-serif" font-weight="bold" font-size="21" fill="url(#goldGrad)" letter-spacing="1">
     <textPath href="#textPathTop" startOffset="50%" text-anchor="middle">
@@ -40,36 +38,26 @@ const gmsaSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" w
     </textPath>
   </text>
   
-  <!-- Decorative Stars on sides -->
   <g fill="url(#goldGrad)">
     <polygon points="50,250 55,240 65,240 57,233 60,223 50,230 40,223 43,233 35,240 45,240"/>
     <polygon points="450,250 455,240 465,240 457,233 460,223 450,230 440,223 443,233 435,240 445,240"/>
   </g>
   
-  <!-- Center Crescent & Star & Quran Emblem -->
   <g transform="translate(250, 230)" filter="url(#shadow)">
-    <!-- Crescent Moon -->
     <path d="M 25 -70 A 65 65 0 1 0 70 30 A 55 55 0 1 1 25 -70 Z" fill="url(#goldGrad)" />
-    <!-- Star -->
     <polygon points="45,-45 49,-35 59,-35 51,-29 54,-19 45,-25 36,-19 39,-29 31,-35 41,-35" fill="url(#goldGrad)" />
   </g>
   
-  <!-- Open Quran Book in Center Base -->
   <g transform="translate(250, 275)">
-    <!-- Left Page -->
     <path d="M -5 0 Q -40 -15 -80 0 L -80 35 Q -40 20 -5 35 Z" fill="#ffffff" stroke="url(#goldGrad)" stroke-width="3"/>
-    <!-- Right Page -->
     <path d="M 5 0 Q 40 -15 80 0 L 80 35 Q 40 20 5 35 Z" fill="#ffffff" stroke="url(#goldGrad)" stroke-width="3"/>
-    <!-- Book Spine/Ribbon -->
     <path d="M 0 -5 L 0 40" stroke="url(#goldGrad)" stroke-width="4"/>
-    <!-- Lines representing text -->
     <line x1="-65" y1="10" x2="-20" y2="4" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="-65" y1="20" x2="-20" y2="14" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="20" y1="4" x2="65" y2="10" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
     <line x1="20" y1="14" x2="65" y2="20" stroke="#004D28" stroke-width="2.5" stroke-linecap="round"/>
   </g>
   
-  <!-- Arabic Calligraphy Text / Banner: UNITY IN FAITH -->
   <g transform="translate(250, 355)">
     <rect x="-90" y="-15" width="180" height="28" rx="14" fill="url(#goldGrad)" />
     <text font-family="Arial, sans-serif" font-weight="bold" font-size="13" fill="#004D28" text-anchor="middle" y="4">UNITY IS STRENGTH</text>
@@ -94,7 +82,6 @@ const htuSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" wi
   <circle cx="250" cy="250" r="155" fill="#ffffff" />
   <circle cx="250" cy="250" r="147" fill="url(#blueGrad)" />
 
-  <!-- Outer Text -->
   <path id="htuTextTop" d="M 70 250 A 180 180 0 1 1 430 250" fill="none" />
   <path id="htuTextBottom" d="M 430 250 A 180 180 0 1 1 70 250" fill="none" />
 
@@ -110,30 +97,23 @@ const htuSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" wi
     </textPath>
   </text>
 
-  <!-- Center Gear & Torch Emblem -->
   <g transform="translate(250, 240)">
-    <!-- Cogwheel / Gear -->
     <path d="M -60 -15 L -50 -15 L -45 -30 L -55 -40 L -40 -55 L -30 -45 L -15 -50 L -15 -60 L 15 -60 L 15 -50 L 30 -45 L 40 -55 L 55 -40 L 45 -30 L 50 -15 L 60 -15 L 60 15 L 50 15 L 45 30 L 55 40 L 40 55 L 30 45 L 15 50 L 15 60 L -15 60 L -15 50 L -30 45 L -40 55 L -55 40 L -45 30 L -50 15 L -60 15 Z" fill="none" stroke="url(#goldGradHtu)" stroke-width="8"/>
-    <!-- Inner Circle -->
     <circle cx="0" cy="0" r="42" fill="#ffffff"/>
     <circle cx="0" cy="0" r="36" fill="url(#blueGrad)"/>
 
-    <!-- Torch & Flame -->
     <path d="M -12 25 L 12 25 L 7 5 L -7 5 Z" fill="url(#goldGradHtu)"/>
     <path d="M -15 5 L 15 5 L 10 -8 L -10 -8 Z" fill="url(#goldGradHtu)"/>
-    <!-- Flame -->
     <path d="M 0 -35 Q 15 -18 0 -5 Q -15 -18 0 -35 Z" fill="#FF4500"/>
     <path d="M 0 -30 Q 8 -18 0 -10 Q -8 -18 0 -30 Z" fill="#FFD700"/>
   </g>
 
-  <!-- Open Book at base -->
   <g transform="translate(250, 330)">
     <path d="M -50 -10 Q -25 -20 0 -10 Q 25 -20 50 -10 L 50 15 Q 25 5 0 15 Q -25 5 -50 15 Z" fill="url(#goldGradHtu)"/>
     <path d="M -46 -6 Q -23 -16 0 -7 Q 23 -16 46 -6 L 46 11 Q 23 2 0 11 Q -23 2 -46 11 Z" fill="#ffffff"/>
   </g>
 </svg>`;
 
-// Helper function to create SVG slides with banner graphics
 function createSlideSvg(num, title, subtitle, bgGrad1, bgGrad2) {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
     <defs>
@@ -147,21 +127,16 @@ function createSlideSvg(num, title, subtitle, bgGrad1, bgGrad2) {
       </linearGradient>
     </defs>
     <rect width="1200" height="500" fill="url(#bg${num})" />
-    <!-- Decorative Islamic Geometry Patterns -->
     <g opacity="0.08" fill="#ffffff">
       <circle cx="100" cy="100" r="200" stroke="#fff" stroke-width="4" fill="none"/>
       <circle cx="1100" cy="400" r="250" stroke="#fff" stroke-width="4" fill="none"/>
       <polygon points="600,50 650,150 750,150 670,220 700,320 600,250 500,320 530,220 450,150 550,150" />
     </g>
-    <!-- Dark Vignette Overlay -->
     <rect width="1200" height="500" fill="rgba(0,0,0,0.35)"/>
     
-    <!-- Top Accent Bar -->
     <rect x="0" y="0" width="1200" height="8" fill="url(#goldGrad)"/>
-    <!-- Bottom Accent Bar -->
     <rect x="0" y="492" width="1200" height="8" fill="url(#goldGrad)"/>
 
-    <!-- Content -->
     <g transform="translate(600, 230)" text-anchor="middle">
       <rect x="-420" y="-120" width="840" height="220" rx="16" fill="rgba(0,40,20,0.4)" stroke="url(#goldGrad)" stroke-width="2"/>
       <text font-family="'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="44" fill="#ffffff" y="-40" letter-spacing="1">
@@ -188,14 +163,16 @@ const slides = [
 
 const targetDirs = [
   path.join(__dirname, 'public'),
-  'C:\\Users\\Mazuri\\Desktop\\gmsa-htu\\public'
+  path.join(__dirname, 'images')
 ];
 
 targetDirs.forEach(dir => {
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
 
   fs.writeFileSync(path.join(dir, 'gmsa-logo.svg'), gmsaSvg);
-  fs.writeFileSync(path.join(dir, 'gmsa-logo.png'), gmsaSvg); // Dual extension compatibility
+  fs.writeFileSync(path.join(dir, 'gmsa-logo.png'), gmsaSvg);
 
   fs.writeFileSync(path.join(dir, 'htu-logo.svg'), htuSvg);
   fs.writeFileSync(path.join(dir, 'htu-logo.png'), htuSvg);
@@ -208,4 +185,30 @@ targetDirs.forEach(dir => {
   });
 });
 
-console.log("Assets successfully created in public directory!");
+try {
+  const publicDir = path.join(__dirname, 'public');
+  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
+
+  const filesToCopy = ['index.html', 'style.css', 'script.js'];
+  filesToCopy.forEach(file => {
+    const src = path.join(__dirname, file);
+    if (fs.existsSync(src)) {
+      fs.copyFileSync(src, path.join(publicDir, file));
+    }
+  });
+
+  const adminSrc = path.join(__dirname, 'admin');
+  const adminDest = path.join(publicDir, 'admin');
+  if (fs.existsSync(adminSrc)) {
+    if (!fs.existsSync(adminDest)) fs.mkdirSync(adminDest, { recursive: true });
+    fs.readdirSync(adminSrc).forEach(f => {
+      if (fs.statSync(path.join(adminSrc, f)).isFile()) {
+        fs.copyFileSync(path.join(adminSrc, f), path.join(adminDest, f));
+      }
+    });
+  }
+} catch (e) {
+  console.log("Mirror warning:", e.message);
+}
+
+console.log("Assets and public build bundle successfully created!");
