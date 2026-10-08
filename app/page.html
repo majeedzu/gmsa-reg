@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ghana Muslim Students' Association (GMSA) - Ho Technical University Chapter</title>
+  <meta name="description" content="Official Portal of Ghana Muslim Students' Association (GMSA), Ho Technical University Chapter. Register your student record, access announcements, and join our vibrant Muslim student community.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="../public/gmsa-logo.svg">
+</head>
+<body>
+
+  <!-- Top Header Section -->
+  <header class="site-header">
+    <div class="container">
+      <div class="top-banner">
+        <!-- GMSA Logo (Left) -->
+        <div class="logo-container">
+          <img src="../public/gmsa-logo.png" alt="GMSA Logo" class="logo-img" id="gmsaLogoImg" onerror="this.src='../public/gmsa-logo.svg'">
+        </div>
+        
+        <!-- Centered Titles -->
+        <div class="header-titles">
+          <h1>Ghana Muslim Students’ Association (GMSA)</h1>
+          <h2>Ho Technical University Chapter</h2>
+          <div class="header-tagline">Unity in Faith & Academic Excellence</div>
+        </div>
+
+        <!-- HTU Logo (Right) -->
+        <div class="logo-container">
+          <img src="../public/htu-logo.png" alt="HTU Logo" class="logo-img" id="htuLogoImg" onerror="this.src='../public/htu-logo.svg'">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+
+    <!-- Slideshow Section (Max 5 Images) -->
+    <section class="slideshow-section" aria-label="Campus & Event Highlights">
+      <div class="slideshow-wrapper" id="slideshowContainer">
+        <!-- Slide 1 -->
+        <div class="slide active">
+          <img src="../public/slide1.jpg" alt="GMSA HTU Campus Welcome" onerror="this.src='../public/slide1.svg'">
+        </div>
+        <!-- Slide 2 -->
+        <div class="slide">
+          <img src="../public/slide2.jpg" alt="Annual GMSA Orientation" onerror="this.src='../public/slide2.svg'">
+        </div>
+        <!-- Slide 3 -->
+        <div class="slide">
+          <img src="../public/slide3.jpg" alt="Weekly Da'wah & Quranic Circles" onerror="this.src='../public/slide3.svg'">
+        </div>
+        <!-- Slide 4 -->
+        <div class="slide">
+          <img src="../public/slide4.jpg" alt="Community Service & Outreach" onerror="this.src='../public/slide4.svg'">
+        </div>
+        <!-- Slide 5 -->
+        <div class="slide">
+          <img src="../public/slide5.jpg" alt="Unity is Strength" onerror="this.src='../public/slide5.svg'">
+        </div>
+
+        <!-- Navigation Buttons -->
+        <button type="button" class="slide-btn prev-btn" id="prevSlideBtn" aria-label="Previous Slide">❮</button>
+        <button type="button" class="slide-btn next-btn" id="nextSlideBtn" aria-label="Next Slide">❯</button>
+
+        <!-- Dots Indicators -->
+        <div class="slideshow-dots" id="dotsContainer">
+          <span class="dot active" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+          <span class="dot" data-index="3"></span>
+          <span class="dot" data-index="4"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Welcome Message Section -->
+    <section class="welcome-section">
+      <div class="welcome-card">
+        <h2 class="welcome-title">“Assalaamu Alaikum Warahmatullah Wabarakaatuh”</h2>
+        <p class="welcome-subtitle">Welcome to the official GMSA Ho Technical University Chapter registration portal. Please complete the form below to submit your official record.</p>
+      </div>
+    </section>
+
+    <!-- Student Registration Form Section -->
+    <section class="form-section" id="registrationSection">
+      <div class="form-card">
+        <div class="form-header">
+          <h3>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            Student Record Registration
+          </h3>
+          <p>Fields marked with an asterisk (<span style="color:#DC2626; font-weight:bold;">*</span>) are mandatory.</p>
+        </div>
+
+        <form id="studentRegistrationForm" class="registration-form" novalidate>
+          <!-- Full Name -->
+          <div class="form-group full-width">
+            <label for="fullName">Full Name <span class="required">*</span></label>
+            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="e.g. Ibrahim Abubakar Mohammed" required>
+          </div>
+
+          <!-- Index Number -->
+          <div class="form-group">
+            <label for="indexNumber">Index Number <span class="required">*</span></label>
+            <input type="text" id="indexNumber" name="indexNumber" class="form-input" placeholder="e.g. 0420190001" required>
+          </div>
+
+          <!-- Contact Number -->
+          <div class="form-group">
+            <label for="contact">Contact Number <span class="required">*</span></label>
+            <input type="tel" id="contact" name="contact" class="form-input" placeholder="e.g. 0545862058" required>
+          </div>
+
+          <!-- Programme Level -->
+          <div class="form-group full-width">
+            <label>Programme Level <span class="required">*</span></label>
+            <div class="radio-options">
+              <label class="radio-label">
+                <input type="radio" name="programmeLevel" value="BTech" checked required>
+                BTech
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="programmeLevel" value="HND" required>
+                HND
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="programmeLevel" value="Others" required>
+                Others
+              </label>
+            </div>
+          </div>
+
+          <!-- Programme -->
+          <div class="form-group">
+            <label for="programme">Programme <span class="required">*</span></label>
+            <input type="text" id="programme" name="programme" class="form-input" placeholder="e.g. BTech Computer Science" required list="programmeSuggestions">
+            <datalist id="programmeSuggestions">
+              <option value="BTech Computer Science">
+              <option value="BTech Information Technology">
+              <option value="BTech Mechanical Engineering">
+              <option value="BTech Civil Engineering">
+              <option value="BTech Electrical/Electronic Engineering">
+              <option value="BTech Accounting & Finance">
+              <option value="BTech Hospitality Management">
+              <option value="BTech Marketing">
+              <option value="HND Computer Science">
+              <option value="HND Electrical/Electronic Engineering">
+              <option value="HND Accountancy">
+              <option value="HND Fashion Design & Textiles">
+            </datalist>
+          </div>
+
+          <!-- Hostel / Residence -->
+          <div class="form-group">
+            <label for="hostel">Hostel / Residence <span class="required">*</span></label>
+            <input type="text" id="hostel" name="hostel" class="form-input" placeholder="e.g. Ameen Hostel / Main Campus Hostel" required>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group full-width">
+            <button type="submit" class="btn-submit" id="submitBtn">
+              <span>Submit Record</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Submission Feedback Modal -->
+  <div class="modal-overlay" id="feedbackModal">
+    <div class="modal-box">
+      <div class="modal-icon" id="modalIcon">✓</div>
+      <h3 class="modal-title" id="modalTitle">Status</h3>
+      <p class="modal-message" id="modalMessage">Notification Message</p>
+      <button type="button" class="btn-modal-close" id="closeModalBtn">Close & Continue</button>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- About Us -->
+        <div class="footer-about">
+          <h4>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            About Us
+          </h4>
+          <p>
+            Ghana Muslim Students’ Association (GMSA), Ho Technical University Chapter, is a community of Muslim students committed to unity, brotherhood, faith and active participation on campus.
+          </p>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-contact">
+          <h4>For more information:</h4>
+          <div class="phone-links">
+            <a href="tel:0545862058" class="phone-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              0545862058
+            </a>
+            <a href="tel:0541081265" class="phone-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+              </svg>
+              0541081265
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Bottom -->
+      <div class="footer-bottom">
+        <div class="slogan-badge">Unity is Strength</div>
+        <a href="admin/index.html" class="admin-subtle-link">Admin</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

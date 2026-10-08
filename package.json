@@ -1,0 +1,21 @@
+{
+  "name": "gmsa-htu",
+  "version": "1.0.0",
+  "description": "Ghana Muslim Students' Association (GMSA) - Ho Technical University Chapter Web Portal",
+  "main": "app/page.html",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build": "node generate-assets.js && echo Build complete! All assets ready."
+  },
+  "keywords": [
+    "gmsa",
+    "htu",
+    "ho-technical-university",
+    "muslim-students-association",
+    "vercel",
+    "supabase"
+  ],
+  "author": "GMSA HTU Chapter",
+  "license": "MIT"
+}

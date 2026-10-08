@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 500" width="1200" height="500">
+    <defs>
+      <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#004D28"/>
+        <stop offset="100%" stop-color="#0B3C26"/>
+      </linearGradient>
+      <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#F7D070"/>
+        <stop offset="100%" stop-color="#D4AF37"/>
+      </linearGradient>
+    </defs>
+    <rect width="1200" height="500" fill="url(#bg1)" />
+    <!-- Decorative Islamic Geometry Patterns -->
+    <g opacity="0.08" fill="#ffffff">
+      <circle cx="100" cy="100" r="200" stroke="#fff" stroke-width="4" fill="none"/>
+      <circle cx="1100" cy="400" r="250" stroke="#fff" stroke-width="4" fill="none"/>
+      <polygon points="600,50 650,150 750,150 670,220 700,320 600,250 500,320 530,220 450,150 550,150" />
+    </g>
+    <!-- Dark Vignette Overlay -->
+    <rect width="1200" height="500" fill="rgba(0,0,0,0.35)"/>
+    
+    <!-- Top Accent Bar -->
+    <rect x="0" y="0" width="1200" height="8" fill="url(#goldGrad)"/>
+    <!-- Bottom Accent Bar -->
+    <rect x="0" y="492" width="1200" height="8" fill="url(#goldGrad)"/>
+
+    <!-- Content -->
+    <g transform="translate(600, 230)" text-anchor="middle">
+      <rect x="-420" y="-120" width="840" height="220" rx="16" fill="rgba(0,40,20,0.4)" stroke="url(#goldGrad)" stroke-width="2"/>
+      <text font-family="'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="44" fill="#ffffff" y="-40" letter-spacing="1">
+        Welcome to GMSA HTU
+      </text>
+      <text font-family="'Segoe UI', Roboto, sans-serif" font-weight="600" font-size="24" fill="#F7D070" y="20" letter-spacing="0.5">
+        Fostering Brotherhood, Unity & Islamic Values on Campus
+      </text>
+      <g transform="translate(0, 65)">
+        <rect x="-160" y="-18" width="320" height="36" rx="18" fill="#006837" stroke="#D4AF37" stroke-width="1.5"/>
+        <text font-family="'Segoe UI', Roboto, sans-serif" font-weight="bold" font-size="14" fill="#ffffff" y="5">HTU GMSA CHAPTER 2026</text>
+      </g>
+    </g>
+  </svg>

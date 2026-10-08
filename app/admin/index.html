@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - GMSA HTU</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" type="image/svg+xml" href="../../public/gmsa-logo.svg">
+  <!-- SheetJS CDN for Real Excel (.xlsx) Generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <!-- Admin Login View -->
+  <div id="loginView" class="login-wrapper">
+    <div class="login-card">
+      <img src="../../public/gmsa-logo.png" alt="GMSA Logo" class="login-logo" onerror="this.src='../../public/gmsa-logo.svg'">
+      <h2>GMSA HTU Admin</h2>
+      <p>Enter administrative credentials to access records</p>
+      
+      <form id="adminLoginForm" class="login-form">
+        <div>
+          <label for="username">Username</label>
+          <input type="text" id="username" class="login-input" placeholder="admin" required value="admin">
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" class="login-input" placeholder="••••••••" required value="gmsa2026">
+        </div>
+        <button type="submit" class="btn-login">Login to Dashboard</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Admin Dashboard View -->
+  <div id="dashboardView" style="display: none;">
+    
+    <!-- Navbar Header -->
+    <header class="admin-navbar">
+      <div class="admin-nav-brand">
+        <img src="../../public/gmsa-logo.png" alt="GMSA Crest" onerror="this.src='../../public/gmsa-logo.svg'">
+        <h1>GMSA HTU Portal <span>Admin Control Panel</span></h1>
+      </div>
+      <div style="display:flex; gap:12px; align-items:center;">
+        <a href="../page.html" style="color:#FFF; text-decoration:none; font-size:0.875rem; font-weight:600;" target="_blank">View Main Site ↗</a>
+        <button id="logoutBtn" class="btn-logout">Logout</button>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="admin-main">
+
+      <!-- Navigation Tabs -->
+      <nav class="admin-tabs">
+        <button class="tab-btn active" id="tabStudentsBtn" data-target="sectionStudents">Student Records</button>
+        <button class="tab-btn" id="tabSlideshowBtn" data-target="sectionSlideshow">Slideshow Manager (Max 5)</button>
+      </nav>
+
+      <!-- TAB 1: STUDENT RECORDS -->
+      <section id="sectionStudents">
+
+        <!-- Stats Grid Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Total Registered</h4>
+              <div class="stat-number" id="statTotal">0</div>
+            </div>
+            <div class="stat-icon">🎓</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>BTech Students</h4>
+              <div class="stat-number" id="statBTech">0</div>
+            </div>
+            <div class="stat-icon">📘</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>HND Students</h4>
+              <div class="stat-number" id="statHND">0</div>
+            </div>
+            <div class="stat-icon">📗</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-info">
+              <h4>Others</h4>
+              <div class="stat-number" id="statOthers">0</div>
+            </div>
+            <div class="stat-icon">📙</div>
+          </div>
+        </div>
+
+        <!-- Controls Bar: Search, Filter & Export -->
+        <div class="controls-bar">
+          <div class="search-filter-group">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search by name, index #, programme, hostel...">
+            <select id="filterLevelSelect" class="filter-select">
+              <option value="ALL">All Levels</option>
+              <option value="BTech">BTech Only</option>
+              <option value="HND">HND Only</option>
+              <option value="Others">Others Only</option>
+            </select>
+          </div>
+
+          <!-- Export Excel File Button -->
+          <button id="exportExcelBtn" class="btn-export">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export Excel File (.xlsx)
+          </button>
+        </div>
+
+        <!-- Student Data Table -->
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="data-table" id="studentsTable">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Full Name</th>
+                  <th>Index Number</th>
+                  <th>Level</th>
+                  <th>Programme</th>
+                  <th>Contact</th>
+                  <th>Hostel / Residence</th>
+                  <th>Date Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTableBody">
+                <!-- Dynamically Populated -->
+              </tbody>
+            </table>
+          </div>
+          <div id="emptyState" class="empty-state" style="display: none;">
+            <p>No student records found matching your search query.</p>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: SLIDESHOW MANAGER (MAX 5 IMAGES) -->
+      <section id="sectionSlideshow" style="display: none;">
+        
+        <div class="upload-dropzone" id="uploadDropzone">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#006837" stroke-width="2" style="margin-bottom:8px;">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <h3 style="color:#006837; font-size:1.1rem; font-weight:700;">Upload New Slideshow Image</h3>
+          <p style="color:#64748B; font-size:0.875rem; margin-top:4px;">Drag & drop image file or click to select (Max 5 images total limit)</p>
+          <input type="file" id="slideFileInput" accept="image/*" style="display: none;">
+        </div>
+
+        <h3 style="font-family:'Outfit',sans-serif; color:#0F172A; font-size:1.2rem; margin-bottom:12px;">Active Slideshow Images (<span id="slideCountSpan">5</span>/5)</h3>
+        
+        <div class="slideshow-manager-grid" id="slidesGrid">
+          <!-- Dynamically populated cards for slide 1 to 5 -->
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

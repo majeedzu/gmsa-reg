@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "routes": [
+    {
+      "src": "/admin",
+      "dest": "/app/admin/index.html"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/app/admin/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/app/page.html"
+    }
+  ]
+}
