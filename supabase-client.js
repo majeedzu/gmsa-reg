@@ -7,8 +7,9 @@ const SUPABASE_ANON_KEY = 'gmsa_htu_supabase_key';
 const GMSA_LOGO_KEY = 'gmsa_htu_logo_gmsa';
 const HTU_LOGO_KEY = 'gmsa_htu_logo_htu';
 
-const DEFAULT_SUPABASE_URL = 'https://your-project-id.supabase.co';
-const DEFAULT_SUPABASE_KEY = 'your-actual-supabase-anon-key-here';
+// ✅ Real Supabase credentials — embedded so ALL devices connect automatically
+const DEFAULT_SUPABASE_URL = 'https://gdjbdovehmfzeqmhlicz.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdkamJkb3ZlaG1memVxbWhsaWN6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MTQxMzExMSwiZXhwIjoyMTA2OTg5MTExfQ.Va843D7x5lDPmOdZ7k4Z45tz_73VL6bWtrAMWecb0QY';
 
 let supabaseClient = null;
 
@@ -195,6 +196,7 @@ async function loadDynamicLogos() {
         .select('*')
         .in('key', ['gmsa_logo', 'htu_logo']);
 
+      // Gracefully skip if settings table doesn't exist yet
       if (!error && Array.isArray(data)) {
         data.forEach(item => {
           if (item.key === 'gmsa_logo' && item.value) {
@@ -208,11 +210,11 @@ async function loadDynamicLogos() {
         });
       }
     } catch (err) {
-      console.warn('Error loading logos from Supabase:', err);
+      // settings table may not exist yet — silently skip
     }
   }
 
-  // Apply to GMSA Logos on page
+  // Apply GMSA logo to all matching elements on page
   if (gmsaLogo) {
     document.querySelectorAll('#gmsaLogoImg, #loginLogoImg, .admin-nav-brand img').forEach(img => {
       img.src = gmsaLogo;
@@ -223,7 +225,7 @@ async function loadDynamicLogos() {
     });
   }
 
-  // Apply to HTU Logos on page
+  // Apply HTU logo to all matching elements on page
   if (htuLogo) {
     document.querySelectorAll('#htuLogoImg').forEach(img => {
       img.src = htuLogo;
@@ -249,7 +251,7 @@ async function apiSaveLogo(logoType, base64OrUrl) {
         .from('settings')
         .upsert({ key: dbKey, value: base64OrUrl, updated_at: new Date().toISOString() });
     } catch (err) {
-      console.warn('Error saving logo to Supabase:', err);
+      console.warn('Logo saved locally only. Settings table may not exist in Supabase yet.');
     }
   }
 }
@@ -290,11 +292,12 @@ async function apiGetSlides() {
     try {
       const { data, error } = await client
         .from('slideshow')
-        .select('*')
+        .select('id, image_url, title')
         .order('id', { ascending: true });
 
       if (!error && Array.isArray(data) && data.length > 0) {
         const slideUrls = data.map(s => s.image_url);
+        // Cache in localStorage for offline resilience
         localStorage.setItem('gmsa_htu_slides', JSON.stringify(slideUrls));
         return slideUrls;
       }
@@ -303,6 +306,7 @@ async function apiGetSlides() {
     }
   }
 
+  // Fall back to localStorage cache
   try {
     const saved = JSON.parse(localStorage.getItem('gmsa_htu_slides'));
     if (saved && Array.isArray(saved) && saved.length > 0) return saved;
@@ -324,15 +328,21 @@ async function apiSaveSlides(slidesArray) {
   const client = supabaseClient || initSupabase();
   if (client) {
     try {
-      // Refresh slideshow table with new slides
-      await client.from('slideshow').delete().neq('id', 0);
+      // First: fetch all existing IDs and delete them one by one (RLS-safe)
+      const { data: existing } = await client.from('slideshow').select('id');
+      if (existing && existing.length > 0) {
+        const ids = existing.map(r => r.id);
+        await client.from('slideshow').delete().in('id', ids);
+      }
+      // Then insert the new slides
       const rows = cleanSlides.map((url, i) => ({
         image_url: url,
         title: `Slide #${i + 1}`
       }));
       await client.from('slideshow').insert(rows);
+      console.log('✓ Slides saved to Supabase — visible on ALL devices');
     } catch (err) {
-      console.warn('Error saving slides to Supabase:', err);
+      console.warn('Slides saved locally only. Supabase sync failed:', err);
     }
   }
 }

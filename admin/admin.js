@@ -36,15 +36,11 @@ function initAuth() {
         return;
       }
 
-      // Strict credential matching for admin authentication
-      const validCredentials = [
-        { user: 'admin', pass: 'gmsa2026' },
-        { user: 'gmsa', pass: 'gmsa2026' }
-      ];
+      // Single strict admin account — no other username or password accepted
+      const ADMIN_USERNAME = 'admin';
+      const ADMIN_PASSWORD = 'gmsa2026';
 
-      const authenticated = validCredentials.some(
-        c => c.user.toLowerCase() === user.toLowerCase() && c.pass === pass
-      );
+      const authenticated = (user === ADMIN_USERNAME) && (pass === ADMIN_PASSWORD);
 
       if (authenticated) {
         sessionStorage.setItem(AUTH_KEY, 'true');
